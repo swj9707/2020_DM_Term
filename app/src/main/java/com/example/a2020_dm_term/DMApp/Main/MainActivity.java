@@ -1,7 +1,8 @@
-package com.example.a2020_dm_term;
+package com.example.a2020_dm_term.DMApp.Main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.a2020_dm_term.R;
 
 public class MainActivity extends AppCompatActivity {
 

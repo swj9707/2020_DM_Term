@@ -1,5 +1,6 @@
 package com.example.a2020_dm_term.DMApp.DB;
 
+import com.example.a2020_dm_term.DMApp.DB.PlanDB;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;

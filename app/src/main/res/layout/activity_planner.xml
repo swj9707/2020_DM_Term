@@ -16,19 +16,28 @@
     <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_below="@+id/today">
-            <GridLayout android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:columnCount="2"
-                        android:rowCount="1">
-                <Button
-                        android:text="주간 일정"
-                        android:layout_height="wrap_content"/>
-                <Button
-                        android:text="월간 일정"
-                        android:layout_height="wrap_content"/>
+            android:layout_below="@+id/today"
+            android:layout_centerInParent="true">
+        <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:columnCount="2"
+                android:rowCount="1"
+                android:layout_centerInParent="true">
+            <Button
+                    android:text="주간 일정"
+                    android:textColor="@android:color/white"
+                    android:background="@android:color/background_dark"
+                    android:layout_height="wrap_content"/>
+            <Button
+                    android:text="월간 일정"
+                    android:textColor="@android:color/white"
+                    android:background="@android:color/background_dark"
+                    android:layout_height="wrap_content"/>
+
             </GridLayout>
+
     </RelativeLayout>
 
 

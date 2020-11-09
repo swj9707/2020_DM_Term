@@ -6,18 +6,36 @@
         android:layout_height="match_parent"
         android:background="#003458"
         >
-    <TextView
-            android:id="@+id/Timer"
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="지금까지 공부 한 시간 : 00시간 00분"
-            android:layout_above="@+id/restrict_title"
-            android:textSize="15sp"
             android:layout_centerInParent="true"
-            android:textColor="@android:color/white"
-            >
-
-    </TextView>
+            android:id="@+id/TimerString"
+            android:orientation="horizontal"
+            android:layout_above="@+id/restrict_title">
+        <TextView
+                android:id="@+id/Timer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="지금까지 공부 한 시간"
+                android:layout_above="@+id/restrict_title"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"
+        >
+        </TextView>
+        <TextView
+                android:id="@+id/Timer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00시간 00분"
+                android:layout_above="@+id/restrict_title"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"
+        >
+        </TextView>
+    </LinearLayout>
     <TextView
             android:id="@+id/restrict_title"
             android:layout_width="wrap_content"

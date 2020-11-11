@@ -16,7 +16,6 @@ import java.util.TimerTask;
 
 public class RestrictActivity extends AppCompatActivity {
     Context context;
-    String since;//지금까지 공부한 시간 타이머
     TextView countString = (TextView)findViewById(R.id.Timer1);
     TextView countTimer = (TextView)findViewById(R.id.Timer2);
     Button button = (Button)findViewById(R.id.stopButton);

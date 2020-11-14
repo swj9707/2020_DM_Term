@@ -16,9 +16,9 @@ import java.util.TimerTask;
 
 public class RestrictActivity extends AppCompatActivity {
     Context context;
-    TextView countString = (TextView)findViewById(R.id.Timer1);
-    TextView countTimer = (TextView)findViewById(R.id.Timer2);
-    Button button = (Button)findViewById(R.id.stopButton);
+    TextView countString ;
+    TextView countTimer;
+    Button button;
     Timer timer;
     class RButtonListener implements View.OnClickListener{
         public void onClick(View v){
@@ -34,11 +34,14 @@ public class RestrictActivity extends AppCompatActivity {
         context = this;
         Toast.makeText(getApplicationContext(),"방해금지 모드가 실행되었습니다.",Toast.LENGTH_SHORT).show();
         RButtonListener buttonListener = new RButtonListener();
+        countString = (TextView)findViewById(R.id.Timer1);
+        countTimer = (TextView)findViewById(R.id.Timer2);
+        button = (Button)findViewById(R.id.stopButton);
+
         button.setOnClickListener(buttonListener);
         timer = new Timer();
         /*아직까지 잘 모르겠는것 -> 화면 권한?
         * */
-
         TimerTask TT = new TimerTask(){
             int elapsedTime = 0;
             int second;

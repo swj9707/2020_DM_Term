@@ -15,10 +15,10 @@ import com.example.a2020_dm_term.R;
 
 public class MainActivity extends AppCompatActivity {
     Context context;
-    TextView today = (TextView)findViewById(R.id.today);
-    Button weeklyPlanButton = (Button)findViewById(R.id.weeklyPlanButton);
-    Button monthlyPlanButton = (Button)findViewById(R.id.monthlyPlanButton);
-    Button restrictModeButton = (Button)findViewById(R.id.restrictModeButton);
+    TextView today;
+    Button weeklyPlanButton;
+    Button monthlyPlanButton;
+    Button restrictModeButton;
     Intent restrictIntent;
     Intent weeklyIntent;
 
@@ -45,11 +45,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_main);
+
+        today =  (TextView)findViewById(R.id.today);
+        weeklyPlanButton = (Button)findViewById(R.id.weeklyPlanButton);
+        monthlyPlanButton = (Button)findViewById(R.id.monthlyPlanButton);
+        restrictModeButton = (Button)findViewById(R.id.restrictModeButton);
+
         restrictIntent = new Intent(this, RestrictActivity.class);
         weeklyIntent = new Intent(this, WeeklyPlannerActivity.class);
+
         //System.out.println("Test Commit WJ");
-        context = this;
 
         weeklyButtonListener wButtonListener = new weeklyButtonListener();
         monthlyButtonListener mButtonListener = new monthlyButtonListener();

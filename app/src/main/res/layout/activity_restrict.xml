@@ -28,7 +28,7 @@
                 android:id="@+id/Timer2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00시간 00분"
+                android:text=""
                 android:layout_above="@+id/restrict_title"
                 android:textSize="15sp"
                 android:layout_weight="1"
@@ -56,7 +56,6 @@
             android:text="방해금지모드 종료"
             android:textColor="@android:color/white"
             android:background="@android:color/background_dark">
-
     </Button>
 
 

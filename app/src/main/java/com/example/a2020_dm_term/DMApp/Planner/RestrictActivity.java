@@ -3,6 +3,7 @@ package com.example.a2020_dm_term.DMApp.Planner;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ public class RestrictActivity extends AppCompatActivity {
     TextView countTimer;
     Button button;
     Timer timer;
+
     class RButtonListener implements View.OnClickListener{
         public void onClick(View v){
             Toast.makeText(getApplicationContext(), "방해금지 모드를 종료합니다.",Toast.LENGTH_SHORT).show();
@@ -27,21 +29,30 @@ public class RestrictActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    final Handler syncTimer = new Handler(){
+        public void timeSetting(String msg){
+            countTimer.setText(msg);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weeklyplan);
+        setContentView(R.layout.activity_restrict);
         context = this;
         Toast.makeText(getApplicationContext(),"방해금지 모드가 실행되었습니다.",Toast.LENGTH_SHORT).show();
-        RButtonListener buttonListener = new RButtonListener();
+
         countString = (TextView)findViewById(R.id.Timer1);
         countTimer = (TextView)findViewById(R.id.Timer2);
         button = (Button)findViewById(R.id.stopButton);
 
-        button.setOnClickListener(buttonListener);
+        RButtonListener ExitListener = new RButtonListener();
+
+        button.setOnClickListener(ExitListener);
         timer = new Timer();
         /*아직까지 잘 모르겠는것 -> 화면 권한?
         * */
+
         TimerTask TT = new TimerTask(){
             int elapsedTime = 0;
             int second;
@@ -55,8 +66,8 @@ public class RestrictActivity extends AppCompatActivity {
                 minute = (elapsedTime % 3600) / 60;
                 second = (elapsedTime % 3600) % 60;
                 time = hour + ":" + minute + ":" + second;
-                Log.d(this.getClass().getName(), time);
-                countTimer.setText(time);
+                Log.v(this.getClass().getName(), time);
+                //syncTimer.ti;
             }
         };
         timer.schedule(TT,0,1000);

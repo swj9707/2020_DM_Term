@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         monthlyPlanButton = (Button)findViewById(R.id.monthlyPlanButton);
         restrictModeButton = (Button)findViewById(R.id.restrictModeButton);
 
-        restrictIntent = new Intent(this, RestrictActivity.class);
-        weeklyIntent = new Intent(this, WeeklyPlannerActivity.class);
+        restrictIntent = new Intent(getApplicationContext(), RestrictActivity.class);
+        weeklyIntent = new Intent(getApplicationContext(), WeeklyPlannerActivity.class);
 
         //System.out.println("Test Commit WJ");
 

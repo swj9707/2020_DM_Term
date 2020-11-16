@@ -3,10 +3,59 @@
               xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent" android:orientation="vertical">
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:layout_weight="3">
-    </RelativeLayout>
+    <ScrollView
+            android:layout_height="match_parent" android:layout_weight="3" android:layout_width="match_parent">
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:layout_weight="3" android:id="@+id/time_table">
+
+                <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content" android:id="@+id/blank"
+                        android:background="@android:color/white"/>
+                <TextView
+                        android:text="일"
+                        android:id="@+id/sun" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp"
+                        android:layout_height="wrap_content" android:layout_toRightOf="@id/blank"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+                <TextView
+                        android:text="월"
+                        android:id="@+id/mon" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp"
+                        android:layout_height="wrap_content" android:layout_toRightOf="@id/sun"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+                <TextView
+                        android:text="화"
+                        android:layout_height="wrap_content" android:id="@+id/tue" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp" android:layout_toRightOf="@id/mon"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+                <TextView
+                        android:text="수"
+                        android:layout_height="wrap_content" android:id="@+id/wed" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp" android:layout_toRightOf="@id/tue"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+                <TextView
+                        android:text="목"
+                        android:layout_height="wrap_content" android:id="@+id/thu" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp" android:layout_toRightOf="@id/wed"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+                <TextView
+                        android:text="금"
+                        android:layout_height="wrap_content" android:id="@+id/fri" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp" android:layout_toRightOf="@id/thu"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+                <TextView
+                        android:text="토"
+                        android:layout_height="wrap_content" android:id="@+id/sat" android:layout_weight="1"
+                        android:gravity="center" android:layout_width="100dp" android:layout_toRightOf="@id/fri"
+                        android:background="@android:color/white" android:layout_marginLeft="1dp"/>
+            </RelativeLayout>
+        </HorizontalScrollView>
+    </ScrollView>
     <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:layout_weight="7" android:padding="5dp">

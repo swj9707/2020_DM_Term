@@ -9,10 +9,10 @@
               android:singleLine="true">
     </EditText>
 
-    <TimePicker android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:timePickerMode="spinner" android:id="@+id/timePicker">
-    </TimePicker>
+    <NumberPicker android:id="@+id/numberPicker"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+
 
     <LinearLayout
             android:layout_width="match_parent"

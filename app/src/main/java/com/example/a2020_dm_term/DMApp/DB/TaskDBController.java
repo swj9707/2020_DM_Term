@@ -50,7 +50,7 @@ public class TaskDBController {
     }
     public void create(){
         mDBHelper.onCreate(mDB);
-        System.out.println("ingredient DB Helper create");
+        System.out.println("Task DB Helper create");
     }
     public void close(){mDB.close();}
 

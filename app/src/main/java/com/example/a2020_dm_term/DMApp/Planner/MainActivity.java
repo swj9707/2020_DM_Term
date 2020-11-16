@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
         PlanDBController plnDBC = new PlanDBController(this);
         TaskDBController tskDBC = new TaskDBController(this);
-        plnDBC.create();
         plnDBC.open();
-        tskDBC.create();
+        plnDBC.create();
         tskDBC.open();
+        tskDBC.create();
         //데이터베이스 컨트롤러 불러온 다음 데이터베이스 세팅하기
 
         plnDBC.SelectAll();

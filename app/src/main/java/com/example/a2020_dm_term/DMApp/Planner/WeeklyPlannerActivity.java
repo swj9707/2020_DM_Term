@@ -155,7 +155,34 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     TaskBlock task = (TaskBlock) event.getLocalState();
                     int period = task.period;
                     int hour = cell.getId() / 10;
+
+                    CustomCell belowCell;
+                    Boolean droppable = cell.droppable;
+
+                    if (!droppable) {
+                        Toast.makeText(getApplicationContext(), "이미 배정됐습니다.", Toast.LENGTH_SHORT).show();
+                        System.out.println(cell.period);
+                        splitCell(cell.period, v.getId());//셀 분할 테스트 추후 따로 삭제 창을 만들 예정
+                        break;
+                    }
+
+                    for (int i = 1; i <= period - 1; i++) {
+                        belowCell = (CustomCell) findViewById(v.getId() + i * 10);
+                        if (belowCell == null) {
+                            droppable = false;
+                            break;
+                        }
+                        droppable &= belowCell.droppable;
+                    }
+
+                    if (!droppable) {
+                        Toast.makeText(getApplicationContext(), "다른 일정과 겹칩니다.", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
                     cell.setText(task.title);
+                    cell.droppable = false;
+                    cell.period = period;
                     System.out.println(v.getId() + " ACTION_DROP period: " + period + " hour: " + (hour - 1));
 
                     if (period == 1)
@@ -177,6 +204,39 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cell.getLayoutParams();
         params.height = period * cell.getHeight() + (period - 1) * dp2px(1);
         cell.setLayoutParams(params);
+    }
+
+    public void splitCell(int period, int id) {
+        System.out.println(id);
+        CustomCell currentCell = (CustomCell) findViewById(id);
+        currentCell.droppable = true;
+        currentCell.setText("");
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dp2px(100), dp2px(100));
+        params.addRule(RelativeLayout.RIGHT_OF, id / 10 * 10);
+        params.addRule(RelativeLayout.ALIGN_TOP, id / 10 * 10);
+        params.setMargins(dp2px(1) * (id % 10) + dp2px(100) * ((id % 10) - 1), 0, 0, dp2px(1));
+
+        currentCell.setLayoutParams(params);
+
+        for (int i = 1; i < period; i++) {
+            CustomCell newCell = new CustomCell(this);
+            int newId = id + (10 * i);
+            newCell.setId(newId);
+
+            params = new RelativeLayout.LayoutParams(dp2px(100), dp2px(100));
+            params.setMargins(dp2px(1) * (id % 10) + dp2px(100) * ((id % 10) - 1), 0, 0, dp2px(1));
+            int targetId = newId / 10 * 10;
+            params.addRule(RelativeLayout.RIGHT_OF, targetId);
+            params.addRule(RelativeLayout.ALIGN_TOP, targetId);
+
+            newCell.setOnDragListener(new myOnDragListener());
+            newCell.setGravity(Gravity.CENTER);
+            newCell.setBackgroundColor(Color.WHITE);
+            newCell.setLayoutParams(params);
+
+            timeTable.addView(newCell);
+        }
     }
 
     public int dp2px(int dp) {
@@ -225,9 +285,11 @@ class CustomButton extends AppCompatButton {
 
 class CustomCell extends androidx.appcompat.widget.AppCompatTextView {
     boolean droppable;
+    int period;
 
-    CustomCell(Context context){
+    CustomCell(Context context) {
         super(context);
-        droppable = false;
+        droppable = true;
+        period = -1;
     }
 }

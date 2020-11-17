@@ -17,11 +17,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class PlanDBController {
+public class TaskDBController {
     private static final String DATABASE_NAME = "InnerDatabase(SQLite).db";
     private static final int DATABASE_VERSION = 1;
     public static SQLiteDatabase mDB;
-    private PlanDBController.DatabaseHelper mDBHelper;
+    private TaskDBController.DatabaseHelper mDBHelper;
     private Context mCtx;
 
     private class DatabaseHelper extends SQLiteOpenHelper{
@@ -32,35 +32,33 @@ public class PlanDBController {
 
         @Override
         public void onCreate(SQLiteDatabase db){
-            db.execSQL(PlanDB.CreateDB._CREATE1);
+            db.execSQL(TaskDB.CreateDB._CREATE2);
         }
         //Table 생성
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS "+ PlanDB.CreateDB._TABLENAME1);
+            db.execSQL("DROP TABLE IF EXISTS "+ TaskDB.CreateDB._TABLENAME2);
             onCreate(db);
         }
     }
-    public PlanDBController(Context context){this.mCtx = context;}
-    public PlanDBController open() throws SQLException {
-        mDBHelper = new PlanDBController.DatabaseHelper(mCtx, DATABASE_NAME, null, DATABASE_VERSION);
+    public TaskDBController(Context context){this.mCtx = context;}
+    public TaskDBController open() throws SQLException {
+        mDBHelper = new TaskDBController.DatabaseHelper(mCtx, DATABASE_NAME, null, DATABASE_VERSION);
         mDB = mDBHelper.getWritableDatabase();
         return this;
     }
     public void create(){
         mDBHelper.onCreate(mDB);
-        System.out.println("Plan DB Helper create");
+        System.out.println("Task DB Helper create");
     }
     public void close(){mDB.close();}
 
     // Insert DB
-    public long insertColumn(String name, String contents, String startDate, String endDate){
+    public long insertColumn(String taskname, String continuousTime){
         ContentValues values = new ContentValues();
-        values.put(PlanDB.CreateDB.NAME, name);
-        values.put(PlanDB.CreateDB.CONTENTS,contents);
-        values.put(PlanDB.CreateDB.STARTDATE, startDate);
-        values.put(PlanDB.CreateDB.ENDDATE, endDate);
+        values.put(TaskDB.CreateDB.TASKNAME, taskname);
+        values.put(TaskDB.CreateDB.CONTIUOUSTIME,continuousTime);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while (c.moveToNext()){
@@ -72,16 +70,14 @@ public class PlanDBController {
         }*/
         //예전에 만들었던 코드에서 썼던 중복 확인 메서드. 지금은 필요없지만 나중에 혹시 필요하면 고쳐쓰게 냅둠
 
-        return mDB.insert(PlanDB.CreateDB._TABLENAME1, null, values);
+        return mDB.insert(TaskDB.CreateDB._TABLENAME2, null, values);
     }
 
     // Update DB
-    public boolean updateColumn(long id, String name, String contents, String startDate, String endDate){
+    public boolean updateColumn(long id, String taskname, String continuousTime){
         ContentValues values = new ContentValues();
-        values.put(PlanDB.CreateDB.NAME, name);
-        values.put(PlanDB.CreateDB.CONTENTS,contents);
-        values.put(PlanDB.CreateDB.STARTDATE, startDate);
-        values.put(PlanDB.CreateDB.ENDDATE, endDate);
+        values.put(TaskDB.CreateDB.TASKNAME, taskname);
+        values.put(TaskDB.CreateDB.CONTIUOUSTIME,continuousTime);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while(c.moveToNext()){
@@ -92,37 +88,33 @@ public class PlanDBController {
             }
         }*/
 
-        return mDB.update(PlanDB.CreateDB._TABLENAME1, values, "_id=" + id, null) > 0;
+        return mDB.update(TaskDB.CreateDB._TABLENAME2, values, "_id=" + id, null) > 0;
     }
 
     // Delete All
     public void deleteAllColumns() {
-        mDB.delete(PlanDB.CreateDB._TABLENAME1, null, null);
+        mDB.delete(TaskDB.CreateDB._TABLENAME2, null, null);
     }
 
     // Delete DB
     public boolean deleteColumn(long id){
-        return mDB.delete(PlanDB.CreateDB._TABLENAME1, "_id="+id, null) > 0;
+        return mDB.delete(TaskDB.CreateDB._TABLENAME2, "_id="+id, null) > 0;
     }
     // Select DB
     public Cursor selectColumns(){
-        return mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
+        return mDB.query(TaskDB.CreateDB._TABLENAME2, null, null, null, null, null, null);
     }
 
     public void SelectAll(){
         Cursor c = selectColumns();
         while(c.moveToNext()){
             int _id = c.getInt(0);
-            String Name = c.getString(1);
-            String Content = c.getString(2);
-            String StartDate = c.getString(3);
-            String EndDate = c.getString(3);
-            Log.d("","_id:"+_id+",Name:"+Name
-                    +",Content:"+Content+",StartDate:"+StartDate+",EndDate:"+EndDate);
+            String TaskName = c.getString(1);
+            String ContinuousTime = c.getString(2);
+            Log.d("","_id:"+_id+",TaskName:"+TaskName
+                    +",ContinuousTIme:"+ContinuousTime);
         }
     }
-
-
 
     public Cursor sortColumn(String sort){
         Cursor c = mDB.rawQuery( "SELECT * FROM items ORDER BY " + sort + ";", null);

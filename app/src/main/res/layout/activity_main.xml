@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".DMApp.Main.MainActivity">
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#003458">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/today"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="2020년 11월 03일"
+                android:textColor="@android:color/white"
+                android:textSize="25sp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/today"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <Button
+                        android:id="@+id/weeklyPlanButton"
+                        android:text="주간 일정"
+                        android:textColor="@android:color/white"
+                        android:background="@android:color/background_dark"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+                <Button
+                        android:id="@+id/monthlyPlanButton"
+                        android:text="월간 일정"
+                        android:textColor="@android:color/white"
+                        android:background="@android:color/background_dark"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="303dp"
+            android:background="@android:color/background_dark"
+            android:layout_marginHorizontal="10dp"/>
+    <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
+        <Button
+            android:id="@+id/restrictModeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop = "10dp"
+            android:background="@android:color/background_dark"
+            android:text="방해금지모드"
+            android:textColor="@android:color/white"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@android:color/background_dark"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"/>
+    <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
+    </LinearLayout>
+</ScrollView>

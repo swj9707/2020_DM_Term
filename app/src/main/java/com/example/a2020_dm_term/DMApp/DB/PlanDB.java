@@ -17,5 +17,4 @@ public class PlanDB {
                 +STARTDATE+" text not null , "
                 +ENDDATE+" text not null); ";
     }
-
 }

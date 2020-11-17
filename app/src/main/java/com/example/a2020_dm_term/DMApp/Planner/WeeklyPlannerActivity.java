@@ -16,7 +16,6 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import com.example.a2020_dm_term.R;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -59,7 +58,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dp2px(100), dp2px(100));
                 params.addRule(RelativeLayout.RIGHT_OF, hour * 10);
                 params.addRule(RelativeLayout.ALIGN_TOP, hour * 10);
-                TextView cell = new TextView(this);
+                CustomCell cell = new CustomCell(this);
                 params.setMargins(dp2px(1) * day + dp2px(100) * (day - 1), 0, 0, dp2px(1));
 
                 cell.setId(hour * 10 + day);
@@ -70,37 +69,6 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 timeTable.addView(cell);
             }
         }
-
-        /*for (int hour = 0; hour < 24; hour++) {
-            TableRow tableRow = new TableRow(this);
-            tableRow.setMinimumHeight(dp2px(100));
-            tableRow.setBackgroundColor(Color.BLACK);
-
-            TableRow.LayoutParams params = new TableRow.LayoutParams();
-            params.height = TableRow.LayoutParams.MATCH_PARENT;
-
-            TextView rowIndex = new TextView(this);
-            rowIndex.setText(Integer.toString(hour));
-            rowIndex.setGravity(Gravity.CENTER);
-            rowIndex.setBackgroundColor(Color.WHITE);
-
-            rowIndex.setLayoutParams(params);
-            tableRow.addView(rowIndex);
-
-            for (int day = 0; day < 7; day++) {
-                TextView td = new TextView(this);
-                params.setMargins(1, 1, 1, 1);
-
-                td.setId(hour * 10 + day);
-                td.setOnDragListener(new myOnDragListener());
-                td.setWidth(dp2px(100));
-                td.setGravity(Gravity.CENTER);
-                td.setBackgroundColor(Color.WHITE);
-                td.setLayoutParams(params);
-                tableRow.addView(td);
-            }
-            timeTable.addView(tableRow);
-        }*/
     }
 
     public void addBtnOnClick(View view) {//추가 버튼 눌렀을 시 동작
@@ -172,7 +140,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     class myOnDragListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
-            TextView textView = (TextView) v;
+            CustomCell cell = (CustomCell) v;
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     //System.out.println(v.getId() + " ACTION_DRAG_STARTED");
@@ -186,18 +154,13 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 case DragEvent.ACTION_DROP:
                     TaskBlock task = (TaskBlock) event.getLocalState();
                     int period = task.period;
-                    int hour = textView.getId() / 10;
-                    textView.setText(task.title);
+                    int hour = cell.getId() / 10;
+                    cell.setText(task.title);
                     System.out.println(v.getId() + " ACTION_DROP period: " + period + " hour: " + (hour - 1));
 
                     if (period == 1)
                         break;
-
-                    for (int i = 1; i <= period - 1; i++)
-                        timeTable.removeView(findViewById(v.getId() + i * 10));
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
-                    params.height = period * textView.getHeight() + (period - 1) * dp2px(1);
-                    textView.setLayoutParams(params);
+                    mergeCells(period, v.getId());
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //System.out.println(v.getId() + "ACTION_DRAG_ENDED");
@@ -208,7 +171,12 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     }
 
     public void mergeCells(int period, int id) {
-
+        CustomCell cell = (CustomCell) findViewById(id);
+        for (int i = 1; i <= period - 1; i++)
+            timeTable.removeView(findViewById(id + i * 10));
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cell.getLayoutParams();
+        params.height = period * cell.getHeight() + (period - 1) * dp2px(1);
+        cell.setLayoutParams(params);
     }
 
     public int dp2px(int dp) {
@@ -252,5 +220,14 @@ class CustomButton extends AppCompatButton {
     CustomButton(Context context, TaskBlock task) {
         super(context);
         this.task = task;
+    }
+}
+
+class CustomCell extends androidx.appcompat.widget.AppCompatTextView {
+    boolean droppable;
+
+    CustomCell(Context context){
+        super(context);
+        droppable = false;
     }
 }

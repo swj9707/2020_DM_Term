@@ -93,7 +93,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 task.period = numberPicker.getValue();
                 taskBlockArrayList.add(task);
                 dialog.dismiss();
-
+                //한 이쯤에서 데베 관련 짓거리를 해줘야 함
                 task_layout.addView(mkBtn(task));
             }
         });

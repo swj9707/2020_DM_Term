@@ -55,10 +55,10 @@ public class TaskDBController {
     public void close(){mDB.close();}
 
     // Insert DB
-    public long insertColumn(String taskname, String continuousTime){
+    public long insertColumn(String taskname, String period){
         ContentValues values = new ContentValues();
         values.put(TaskDB.CreateDB.TASKNAME, taskname);
-        values.put(TaskDB.CreateDB.CONTIUOUSTIME,continuousTime);
+        values.put(TaskDB.CreateDB.PERIOD,period);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while (c.moveToNext()){
@@ -74,10 +74,10 @@ public class TaskDBController {
     }
 
     // Update DB
-    public boolean updateColumn(long id, String taskname, String continuousTime){
+    public boolean updateColumn(long id, String taskname, String period){
         ContentValues values = new ContentValues();
         values.put(TaskDB.CreateDB.TASKNAME, taskname);
-        values.put(TaskDB.CreateDB.CONTIUOUSTIME,continuousTime);
+        values.put(TaskDB.CreateDB.PERIOD,period);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while(c.moveToNext()){
@@ -110,9 +110,9 @@ public class TaskDBController {
         while(c.moveToNext()){
             int _id = c.getInt(0);
             String TaskName = c.getString(1);
-            String ContinuousTime = c.getString(2);
+            String Period = c.getString(2);
             Log.d("","_id:"+_id+",TaskName:"+TaskName
-                    +",ContinuousTIme:"+ContinuousTime);
+                    +",Period:"+Period);
         }
     }
 

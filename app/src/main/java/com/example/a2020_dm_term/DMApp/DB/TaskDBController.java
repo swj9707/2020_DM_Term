@@ -55,10 +55,12 @@ public class TaskDBController {
     public void close(){mDB.close();}
 
     // Insert DB
-    public long insertColumn(String taskname, String period){
+    public long insertColumn(String type, String taskName, String period, String hour){
         ContentValues values = new ContentValues();
-        values.put(TaskDB.CreateDB.TASKNAME, taskname);
+        values.put(TaskDB.CreateDB.TYPE, type);
+        values.put(TaskDB.CreateDB.TASKNAME,taskName);
         values.put(TaskDB.CreateDB.PERIOD,period);
+        values.put(TaskDB.CreateDB.HOUR,hour);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while (c.moveToNext()){
@@ -74,10 +76,12 @@ public class TaskDBController {
     }
 
     // Update DB
-    public boolean updateColumn(long id, String taskname, String period){
+    public boolean updateColumn(long id, String type, String taskName, String period, String hour){
         ContentValues values = new ContentValues();
-        values.put(TaskDB.CreateDB.TASKNAME, taskname);
+        values.put(TaskDB.CreateDB.TYPE, type);
+        values.put(TaskDB.CreateDB.TASKNAME,taskName);
         values.put(TaskDB.CreateDB.PERIOD,period);
+        values.put(TaskDB.CreateDB.HOUR,hour);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while(c.moveToNext()){
@@ -109,10 +113,12 @@ public class TaskDBController {
         Cursor c = selectColumns();
         while(c.moveToNext()){
             int _id = c.getInt(0);
-            String TaskName = c.getString(1);
-            String Period = c.getString(2);
-            Log.d("","_id:"+_id+",TaskName:"+TaskName
-                    +",Period:"+Period);
+            String Type = c.getString(1);
+            String TaskName = c.getString(2);
+            String Period = c.getString(3);
+            String Hour = c.getString(4);
+            Log.d("","_id:"+_id+" ,Type:"+Type
+                    +" ,TaskName:"+TaskName+" ,Period:"+Period+" ,Hour:"+Hour);
         }
     }
 

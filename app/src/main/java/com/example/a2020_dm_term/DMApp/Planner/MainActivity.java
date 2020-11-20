@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     Button restrictModeButton;
     Intent restrictIntent;
     Intent weeklyIntent;
+    public static PlanDBController plnDBC;
+    public static TaskDBController tskDBC;
 
 
     class weeklyButtonListener implements View.OnClickListener{
@@ -50,16 +52,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //레이아웃 불러오기
 
-        PlanDBController plnDBC = new PlanDBController(this);
-        TaskDBController tskDBC = new TaskDBController(this);
+        plnDBC = new PlanDBController(this);
+        tskDBC = new TaskDBController(this);
         plnDBC.open();
         plnDBC.create();
+
         tskDBC.open();
         tskDBC.create();
-        //데이터베이스 컨트롤러 불러온 다음 데이터베이스 세팅하기
 
+        //데이터베이스 컨트롤러 불러온 다음 데이터베이스 세팅하기
+        //Open -> Create -> Close 사이클인 이유는
+        //create -> open 같은 경우는 에러 남
+        //일단 열어보고 없으면 만들고 close해줘야함
+        //close 하는 이유는 -> Connection Pool 문제 보단
+        //Producer Consumer 문제 때문
         plnDBC.SelectAll();
         tskDBC.SelectAll();
+        plnDBC.close();
+        tskDBC.close();
         //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
 
         today =  (TextView)findViewById(R.id.today);

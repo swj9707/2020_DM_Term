@@ -70,6 +70,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             }
         }
     }
+    //내가 이해하기엔 이 녀석들은 아마 일정 스케쥴 나오는 녀석들이고
 
     public void addBtnOnClick(View view) {//추가 버튼 눌렀을 시 동작
         System.out.println("add btn onclick");
@@ -94,9 +95,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 taskBlockArrayList.add(task);
                 dialog.dismiss();
                 //한 이쯤에서 데베 관련 짓거리를 해줘야 함
+                MainActivity.tskDBC.open();
+                //MainActivity.tskDBC.insertColumn()
+                MainActivity.tskDBC.close();
+                //현재 코드로는 컬럼이 부족함. 하나 만들어주세요 형님
                 task_layout.addView(mkBtn(task));
             }
         });
+        //컨펌 버튼 눌렀을 때 액션 리스너
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override

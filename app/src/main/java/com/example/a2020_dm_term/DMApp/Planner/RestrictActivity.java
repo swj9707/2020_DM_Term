@@ -21,6 +21,12 @@ public class RestrictActivity extends AppCompatActivity {
     TextView countTimer;
     Button button;
     Timer timer;
+    String time;
+    int elapsedTime = 0;
+    int second;
+    int minute;
+    int hour;
+    private final Handler handler = new Handler();
 
     class RButtonListener implements View.OnClickListener{
         public void onClick(View v){
@@ -45,7 +51,6 @@ public class RestrictActivity extends AppCompatActivity {
         countString = (TextView)findViewById(R.id.Timer1);
         countTimer = (TextView)findViewById(R.id.Timer2);
         button = (Button)findViewById(R.id.stopButton);
-
         RButtonListener ExitListener = new RButtonListener();
 
         button.setOnClickListener(ExitListener);
@@ -54,11 +59,6 @@ public class RestrictActivity extends AppCompatActivity {
         * */
 
         TimerTask TT = new TimerTask(){
-            int elapsedTime = 0;
-            int second;
-            int minute;
-            int hour;
-            String time;
             @Override
             public void run() {
                 elapsedTime += 1;
@@ -67,9 +67,17 @@ public class RestrictActivity extends AppCompatActivity {
                 second = (elapsedTime % 3600) % 60;
                 time = hour + ":" + minute + ":" + second;
                 Log.v(this.getClass().getName(), time);
-                //syncTimer.ti;
+                updateTime();
             }
         };
         timer.schedule(TT,0,1000);
+    }
+    protected void updateTime(){
+        Runnable updater = new Runnable(){
+            public void run(){
+                countTimer.setText(time);
+            }
+        };
+        handler.post(updater);
     }
 }

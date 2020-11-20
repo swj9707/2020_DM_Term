@@ -116,7 +116,7 @@ public class PlanDBController {
             String Name = c.getString(1);
             String Content = c.getString(2);
             String StartDate = c.getString(3);
-            String EndDate = c.getString(3);
+            String EndDate = c.getString(4);
             Log.d("","_id:"+_id+" ,Name:"+Name
                     +" ,Content:"+Content+" ,StartDate:"+StartDate+" ,EndDate:"+EndDate);
         }

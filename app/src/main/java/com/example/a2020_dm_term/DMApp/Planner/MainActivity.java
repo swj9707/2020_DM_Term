@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     TextView today;
     Button weeklyPlanButton;
-    Button monthlyPlanButton;
     Button restrictModeButton;
     Intent restrictIntent;
     Intent weeklyIntent;
@@ -30,11 +29,6 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v){
             //주간 계획으로 넘어감
             startActivity(weeklyIntent);
-        }
-    }
-    class monthlyButtonListener implements View.OnClickListener{
-        public void onClick(View v){
-            //월간 계획으로 넘어감
         }
     }
     class restrictButtonListener implements View.OnClickListener{
@@ -64,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         //Open -> Create -> Close 사이클인 이유는
         //create -> open 같은 경우는 에러 남
         //일단 열어보고 없으면 만들고 close해줘야함
-        //close 하는 이유는 -> Connection Pool 문제 보단
-        //Producer Consumer 문제 때문
+        //close 하는 이유는 -> 계속 열어둔다 해도 이 앱에선 뭐 상관없겠지만
+        //그래도 혹시나 모르는 에러를 방지하기 위함
         plnDBC.SelectAll();
         tskDBC.SelectAll();
         plnDBC.close();
@@ -74,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         today =  (TextView)findViewById(R.id.today);
         weeklyPlanButton = (Button)findViewById(R.id.weeklyPlanButton);
-        monthlyPlanButton = (Button)findViewById(R.id.monthlyPlanButton);
         restrictModeButton = (Button)findViewById(R.id.restrictModeButton);
         //xml 상에 있는 요소들 불러오기
 
@@ -83,10 +76,8 @@ public class MainActivity extends AppCompatActivity {
         //인텐트 객체들 선언
 
         weeklyButtonListener wButtonListener = new weeklyButtonListener();
-        monthlyButtonListener mButtonListener = new monthlyButtonListener();
         restrictButtonListener rButtonListener = new restrictButtonListener();
         weeklyPlanButton.setOnClickListener(wButtonListener);
-        monthlyPlanButton.setOnClickListener(mButtonListener);
         restrictModeButton.setOnClickListener(rButtonListener);
         //버튼 리스터 객체 선언 및 설정
 

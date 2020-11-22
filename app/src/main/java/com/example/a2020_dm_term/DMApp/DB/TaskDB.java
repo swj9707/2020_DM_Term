@@ -34,5 +34,4 @@ type integer not null <- customTextView.type
 title text not null <- customTextView.task.title
 period integer not null <- customTextView.task.period
 hour integer not null <- customTextView.task.hour
-아니 또 왜 되는거지?
  */

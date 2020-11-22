@@ -22,6 +22,7 @@ public class RestrictActivity extends AppCompatActivity {
     Button button;
     Timer timer;
     String time;
+    TimerTask TT;
     int elapsedTime = 0;
     int second;
     int minute;
@@ -35,7 +36,6 @@ public class RestrictActivity extends AppCompatActivity {
             finish();
         }
     }
-
     final Handler syncTimer = new Handler(){
         public void timeSetting(String msg){
             countTimer.setText(msg);
@@ -58,7 +58,7 @@ public class RestrictActivity extends AppCompatActivity {
         /*아직까지 잘 모르겠는것 -> 화면 권한?
         * */
 
-        TimerTask TT = new TimerTask(){
+        TT = new TimerTask(){
             @Override
             public void run() {
                 elapsedTime += 1;
@@ -72,10 +72,43 @@ public class RestrictActivity extends AppCompatActivity {
         };
         timer.schedule(TT,0,1000);
     }
+
+    @Override
+    protected void onStop(){
+        TT.cancel();
+        super.onStop();
+    }
+
+    @Override
+    protected  void onPause(){
+        TT.cancel();
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart(){
+        stopTimer();
+        super.onRestart();
+    }
+
+    @Override
+    protected  void onDestroy(){
+        TT.cancel();
+        super.onDestroy();
+    }
     protected void updateTime(){
         Runnable updater = new Runnable(){
             public void run(){
                 countTimer.setText(time);
+            }
+        };
+        handler.post(updater);
+    }
+    protected void stopTimer(){
+        Runnable updater = new Runnable() {
+            @Override
+            public void run() {
+                countTimer.setText("방해금지 모드가 종료되었습니다.");
             }
         };
         handler.post(updater);

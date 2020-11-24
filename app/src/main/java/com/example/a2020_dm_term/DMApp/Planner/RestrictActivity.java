@@ -56,6 +56,7 @@ public class RestrictActivity extends AppCompatActivity {
         button.setOnClickListener(ExitListener);
         timer = new Timer();
         /*아직까지 잘 모르겠는것 -> 화면 권한?
+        onPause, onStop에서 어떻게든 해결해야 함.
         * */
 
         TT = new TimerTask(){

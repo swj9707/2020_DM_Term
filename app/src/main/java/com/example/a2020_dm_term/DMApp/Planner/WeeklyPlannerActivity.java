@@ -116,8 +116,6 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 task.title = task_name.getText().toString();
                 task.period = numberPicker.getValue();
                 dialog.dismiss();
-
-
                 CustomTextView newBtn = new CustomTextView(context, TASK_BLOCK);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(130), dp2px(130));
                 params.setMargins(dp2px(10), dp2px(10), dp2px(10), dp2px(10));
@@ -213,6 +211,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 case DragEvent.ACTION_DROP:
                     int row = targetCell.getId() / 10;
                     int column = targetCell.getId() % 10;
+
 
                     boolean ext = false;
                     CustomTextView droppedCell = (CustomTextView) event.getLocalState();

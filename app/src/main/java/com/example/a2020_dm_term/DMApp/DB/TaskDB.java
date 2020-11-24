@@ -13,6 +13,7 @@ public class TaskDB {
                 +_ID+" integer primary key autoincrement, "
                 +TYPE+" integer not null , "
                 +TASKNAME+" text not null , "
+
                 +PERIOD+" integer not null , "
                 +HOUR+" integer not null); ";
     }
@@ -22,7 +23,8 @@ class CustomTextView extends androidx.appcompat.widget.AppCompatTextView {
     int type;
     boolean droppable;
     TaskBlock task;
-<<<<<<< WJ
+
+
 
     CustomTextView(Context context, int type) {
         super(context);
@@ -30,8 +32,6 @@ class CustomTextView extends androidx.appcompat.widget.AppCompatTextView {
         droppable = true;
     }
 }
-<<<<<<< WJ
-입력 객체는 위의 CustomTextView
 
 필요한 테이블 칼럼
 type integer not null <- customTextView.type

@@ -4,13 +4,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent" android:orientation="vertical">
     <ScrollView
-            android:layout_height="match_parent" android:layout_weight="3" android:layout_width="match_parent">
+            android:layout_height="match_parent" android:layout_weight="4" android:layout_width="match_parent"
+            android:padding="5dp">
         <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" android:layout_weight="3" android:id="@+id/time_table">
+                    android:layout_height="match_parent" android:id="@+id/time_table">
 
                 <TextView
                         android:layout_width="20dp"
@@ -58,16 +59,32 @@
     </ScrollView>
     <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:layout_weight="7" android:padding="5dp">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_height="match_parent" android:layout_weight="7"
+    >
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                       android:id="@+id/task_layout"
-                      android:layout_gravity="center_vertical">
+                      android:gravity="center" android:padding="5dp">
             <ImageButton
-                    android:layout_width="140dp"
-                    android:layout_height="140dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:id="@+id/addButton"
-                    tools:src="@android:drawable/ic_input_add"
+                    android:src="@drawable/add_icon"
                     android:onClick="addBtnOnClick"/>
         </LinearLayout>
     </HorizontalScrollView>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="8.5" android:gravity="center">
+        <Button
+                android:text="@string/confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/week_confirm" android:layout_weight="1"
+                android:layout_margin="5dp"/>
+        <Button
+                android:text="@string/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/week_cancel" android:layout_weight="1"
+                android:layout_marginTop="5dp" android:layout_marginRight="5dp" android:layout_marginBottom="5dp"/>
+    </LinearLayout>
 </LinearLayout>

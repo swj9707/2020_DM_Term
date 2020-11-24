@@ -18,6 +18,8 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.a2020_dm_term.R;
 
+import java.util.ArrayList;
+
 
 public class WeeklyPlannerActivity extends AppCompatActivity {
     Context context;
@@ -25,6 +27,8 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     RelativeLayout timeTable;
     final int TASK_BLOCK = 0;
     final int TABLE_CELL = 1;
+    ArrayList<CustomTextView> taskList = new ArrayList<CustomTextView>();
+    ArrayList<CustomTextView> blockList = new ArrayList<CustomTextView>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,24 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 timeTable.addView(cell);
             }
         }
+        Button main_confirm = findViewById(R.id.week_confirm);
+        Button main_cancel = findViewById(R.id.week_cancel);
+
+        main_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*현재 추가한 데이터들 DB에 추가*/
+                finish();
+            }
+        });
+
+        main_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("cancel button is clicked.");
+                finish();
+            }
+        });
     }
 
     public void addBtnOnClick(View view) {//추가 버튼 눌렀을 시 동작
@@ -95,14 +117,18 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 dialog.dismiss();
 
                 CustomTextView newBtn = new CustomTextView(context, TASK_BLOCK);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(130), dp2px(130));
+                params.setMargins(dp2px(10), dp2px(10), dp2px(10), dp2px(10));
                 newBtn.task = task;
                 newBtn.type = TASK_BLOCK;
                 newBtn.setText(task.title + "\n" + task.period);
-                newBtn.setWidth(dp2px(140));
-                newBtn.setHeight(dp2px(140));
                 newBtn.setGravity(Gravity.CENTER);
+                newBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.edge));
+                newBtn.setLayoutParams(params);
+
                 setDrag(newBtn);
-                setDeleteDialog(newBtn);
+                setDeleteEvent(newBtn);
+                blockList.add(newBtn);
 
                 task_layout.addView(newBtn);
             }
@@ -119,21 +145,29 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void setDeleteDialog(final CustomTextView customView){
+    public void setDeleteEvent(final CustomTextView customView) {
         customView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("삭제");
                 builder.setMessage("일정을 삭제하시겠습니까?");
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int whichButton){
-                        switch(customView.type){
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        switch (customView.type) {
                             case TABLE_CELL:
                                 splitCell(customView.task.period, customView.getId());
+                                taskList.remove((CustomTextView) v);
+                                for (CustomTextView i : taskList) {
+                                    System.out.println(i.task.title);
+                                }
                                 break;
                             case TASK_BLOCK:
                                 task_layout.removeView(customView);
+                                blockList.remove((CustomTextView) v);
+                                for (CustomTextView i : blockList) {
+                                    System.out.println(i.task.title);
+                                }
                                 break;
                         }
                     }
@@ -175,6 +209,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     break;
                 case DragEvent.ACTION_DROP:
                     int row = targetCell.getId() / 10;
+                    int column = targetCell.getId() % 10;
 
                     boolean ext = false;
                     CustomTextView droppedCell = (CustomTextView) event.getLocalState();
@@ -199,14 +234,18 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     targetCell.droppable = false;
                     targetCell.task = droppedCell.task;
                     targetCell.task.hour = row;
+                    targetCell.task.day = column;
                     setDrag(targetCell);
-                    setDeleteDialog(targetCell);
+                    setDeleteEvent(targetCell);
 
                     if (droppedCell.type == TABLE_CELL) {
                         splitCell(droppedCell.task.period, droppedCell.getId());
                         droppedCell.task = null;
                         droppedCell.droppable = true;
                     }
+
+                    if (taskList.indexOf(targetCell) == -1)
+                        taskList.add(targetCell);
 
                     System.out.println(view.getId() + " ACTION_DROP period: " + targetCell.task.period + " hour: " + (row - 1));
 

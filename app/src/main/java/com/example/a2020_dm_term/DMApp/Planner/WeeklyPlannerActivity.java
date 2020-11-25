@@ -30,10 +30,16 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     ArrayList<CustomTextView> taskList = new ArrayList<CustomTextView>();
     ArrayList<CustomTextView> blockList = new ArrayList<CustomTextView>();
 
+    int CELL_WIDTH;
+    int CELL_HEIGHT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weeklyplan);
+
+        CELL_WIDTH = dp2px(70);
+        CELL_HEIGHT = dp2px(70);
 
         context = this;
         task_layout = (LinearLayout) findViewById(R.id.task_layout);
@@ -47,7 +53,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             rowIndex.setBackgroundColor(Color.WHITE);
             rowIndex.setId(hour * 10);
 
-            RelativeLayout.LayoutParams idx_params = new RelativeLayout.LayoutParams(dp2px(20), dp2px(100));
+            RelativeLayout.LayoutParams idx_params = new RelativeLayout.LayoutParams(dp2px(20), CELL_HEIGHT);
             idx_params.setMargins(0, dp2px(1), 0, 0);
             if (hour == 1)
                 idx_params.addRule(RelativeLayout.BELOW, R.id.blank);
@@ -58,11 +64,11 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             timeTable.addView(rowIndex);
 
             for (int day = 1; day <= 7; day++) {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dp2px(100), dp2px(100));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(CELL_WIDTH, CELL_HEIGHT);
                 params.addRule(RelativeLayout.RIGHT_OF, hour * 10);
                 params.addRule(RelativeLayout.ALIGN_TOP, hour * 10);
                 CustomTextView cell = new CustomTextView(this, TABLE_CELL);
-                params.setMargins(dp2px(1) * day + dp2px(100) * (day - 1), 0, 0, dp2px(1));
+                params.setMargins(dp2px(1) * day + CELL_WIDTH * (day - 1), 0, 0, dp2px(1));
 
                 cell.setId(hour * 10 + day);
                 cell.setOnDragListener(new myOnDragListener());
@@ -117,7 +123,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 task.period = numberPicker.getValue();
                 dialog.dismiss();
                 CustomTextView newBtn = new CustomTextView(context, TASK_BLOCK);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(130), dp2px(130));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(100), dp2px(100));
                 params.setMargins(dp2px(10), dp2px(10), dp2px(10), dp2px(10));
                 newBtn.task = task;
                 newBtn.type = TASK_BLOCK;
@@ -127,7 +133,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 newBtn.setLayoutParams(params);
 
                 setDrag(newBtn);
-                setDeleteEvent(newBtn);
+                setDeleteDialog(newBtn);
                 blockList.add(newBtn);
 
                 task_layout.addView(newBtn);
@@ -146,7 +152,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void setDeleteEvent(final CustomTextView customView) {
+    public void setDeleteDialog(final CustomTextView customView) {
         customView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -159,16 +165,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                             case TABLE_CELL:
                                 splitCell(customView.task.period, customView.getId());
                                 taskList.remove((CustomTextView) v);
-                                for (CustomTextView i : taskList) {
-                                    System.out.println(i.task.title);
-                                }
+                                customView.task = null;
+                                customView.droppable = true;
+                                customView.setOnClickListener(null);
+                                customView.setOnLongClickListener(null);
                                 break;
                             case TASK_BLOCK:
                                 task_layout.removeView(customView);
                                 blockList.remove((CustomTextView) v);
-                                for (CustomTextView i : blockList) {
-                                    System.out.println(i.task.title);
-                                }
                                 break;
                         }
                     }
@@ -238,12 +242,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     targetCell.task.hour = row;
                     targetCell.task.day = column;
                     setDrag(targetCell);
-                    setDeleteEvent(targetCell);
+                    setDeleteDialog(targetCell);
 
                     if (droppedCell.type == TABLE_CELL) {
                         splitCell(droppedCell.task.period, droppedCell.getId());
                         droppedCell.task = null;
                         droppedCell.droppable = true;
+                        droppedCell.setOnLongClickListener(null);
+                        droppedCell.setOnClickListener(null);
                     }
 
                     if (taskList.indexOf(targetCell) == -1)
@@ -277,10 +283,10 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         currentCell.droppable = true;
         currentCell.setText("");
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dp2px(100), dp2px(100));
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(CELL_WIDTH, CELL_HEIGHT);
         params.addRule(RelativeLayout.RIGHT_OF, id / 10 * 10);
         params.addRule(RelativeLayout.ALIGN_TOP, id / 10 * 10);
-        params.setMargins(dp2px(1) * (id % 10) + dp2px(100) * ((id % 10) - 1), 0, 0, dp2px(1));
+        params.setMargins(dp2px(1) * (id % 10) + CELL_WIDTH * ((id % 10) - 1), 0, 0, dp2px(1));
 
         currentCell.setLayoutParams(params);
 
@@ -289,8 +295,8 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             int newId = id + (10 * i);
             newCell.setId(newId);
 
-            params = new RelativeLayout.LayoutParams(dp2px(100), dp2px(100));
-            params.setMargins(dp2px(1) * (id % 10) + dp2px(100) * ((id % 10) - 1), 0, 0, dp2px(1));
+            params = new RelativeLayout.LayoutParams(CELL_WIDTH, CELL_HEIGHT);
+            params.setMargins(dp2px(1) * (id % 10) + CELL_WIDTH * ((id % 10) - 1), 0, 0, dp2px(1));
             int targetId = newId / 10 * 10;
             params.addRule(RelativeLayout.RIGHT_OF, targetId);
             params.addRule(RelativeLayout.ALIGN_TOP, targetId);
@@ -336,18 +342,5 @@ class myDragShadowBuilder extends View.DragShadowBuilder {//드래그 시 이미
 
     public void onDrawShadow(Canvas canvas) {
         shadow.draw(canvas);
-    }
-}
-
-
-class CustomTextView extends androidx.appcompat.widget.AppCompatTextView {
-    int type;
-    boolean droppable;
-    TaskBlock task;
-
-    CustomTextView(Context context, int type) {
-        super(context);
-        this.type = type;
-        droppable = true;
     }
 }

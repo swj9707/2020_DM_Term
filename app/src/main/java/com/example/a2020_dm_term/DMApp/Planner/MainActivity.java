@@ -95,13 +95,19 @@ public class MainActivity extends AppCompatActivity {
         plnDBC.SelectAll();
         tskDBC.SelectAll();
         sHrDBC.SelectAll();
+        //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
         ContinuousTime = sHrDBC.sync(today);
+        /*
+        Sync 메서드 설명
+        매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
+        초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
+        * */
         int hour = ContinuousTime / 3600;
         int minute = (ContinuousTime % 3600) / 60;
         int second = (ContinuousTime % 3600) % 60;
         String time = hour + ":" + minute + ":" + second;
-        //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
+        //그날 공부 총 지속 시간을 계산 해 내는 코드
+        //방법은 간단하니 생략하도록 하겠음
         Log.d("MainActivity","ContinuousTime : "+time);
-
     }
 }

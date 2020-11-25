@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#003458">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#003458">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,39 +22,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/today"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_margin="10dp">
-                <Button
-                        android:id="@+id/weeklyPlanButton"
-                        android:text="주간 일정 계획하기"
-                        android:textColor="@android:color/white"
-                        android:background="@android:color/background_dark"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center" />
+            <Button
+                    android:id="@+id/weeklyPlanButton"
+                    android:text="주간 일정 계획하기"
+                    android:textColor="@android:color/white"
+                    android:background="@android:color/background_dark"
+                    android:layout_height="wrap_content"
+                    android:layout_width="390dp"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+            <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="303dp" android:fillViewport="true" android:layout_weight="1"
+                    android:layout_marginTop="10dp">
+                <RelativeLayout
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content" android:id="@+id/main_time_table">
+                    <TextView
+                            android:layout_width="20dp"
+                            android:layout_height="wrap_content" android:id="@+id/blank"
+                            android:background="@android:color/white"/>
+
+                </RelativeLayout>
+            </androidx.core.widget.NestedScrollView>
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="303dp"
-            android:background="@android:color/background_dark"
-            android:layout_marginHorizontal="10dp"/>
-    <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
+        <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
         <Button
-            android:id="@+id/restrictModeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop = "10dp"
-            android:background="@android:color/background_dark"
-            android:text="방해금지모드"
-            android:textColor="@android:color/white"/>
+                android:id="@+id/restrictModeButton"
+                android:layout_width="390dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/background_dark"
+                android:text="방해금지모드"
+                android:textColor="@android:color/white"/>
         <View
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@android:color/background_dark"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"/>
-    <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
+                android:layout_width="390dp"
+                android:layout_height="200dp"
+                android:background="@android:color/background_dark"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"/>
+        <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
     </LinearLayout>
 </ScrollView>

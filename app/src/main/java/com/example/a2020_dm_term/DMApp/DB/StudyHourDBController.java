@@ -117,6 +117,26 @@ public class StudyHourDBController {
         }
     }
 
+    public int sync(String Today){
+        int totalTime = 0;
+        Cursor c = selectColumns();
+        while(c.moveToNext()){
+            int _id = c.getInt(0);
+            String Date = c.getString(1);
+            String Continuous = c.getString(2);
+            if(!Date.equals(Today)) {
+                Log.d("resetDB Method","Date != Today");
+                Log.d("resetDB Method","Date : "+Date+" Today : "+Today);
+            }
+            else {
+                Log.d("resetDB Method","Date == Today");
+                totalTime += Integer.parseInt(Continuous);
+            }
+        }
+        Log.d("sync Method","Total Time : "+totalTime);
+        return totalTime;
+    }
+
     public Cursor sortColumn(String sort) {
         Cursor c = mDB.rawQuery("SELECT * FROM items ORDER BY " + sort + ";", null);
         return c;

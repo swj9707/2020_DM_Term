@@ -3,6 +3,8 @@ package com.example.a2020_dm_term.DMApp.Planner;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,13 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.a2020_dm_term.R;
 import com.example.a2020_dm_term.DMApp.DB.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /*
 실제 플래너가 실행되는 공간.
 * */
 
 public class MainActivity extends AppCompatActivity {
     Context context;
-    TextView today;
+    TextView todayView;
     Button weeklyPlanButton;
     Button restrictModeButton;
     Intent restrictIntent;
@@ -24,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     public static PlanDBController plnDBC;
     public static TaskDBController tskDBC;
     public static StudyHourDBController sHrDBC;
-
+    private Date date;
+    private int ContinuousTime;
 
     class weeklyButtonListener implements View.OnClickListener{
         public void onClick(View v){
@@ -47,6 +53,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //레이아웃 불러오기
 
+        todayView =  (TextView)findViewById(R.id.today);
+        weeklyPlanButton = (Button)findViewById(R.id.weeklyPlanButton);
+        restrictModeButton = (Button)findViewById(R.id.restrictModeButton);
+        //xml 상에 있는 요소들 불러오기
+
+        restrictIntent = new Intent(getApplicationContext(), RestrictActivity.class);
+        weeklyIntent = new Intent(getApplicationContext(), WeeklyPlannerActivity.class);
+        //인텐트 객체들 선언
+
+        weeklyButtonListener wButtonListener = new weeklyButtonListener();
+        restrictButtonListener rButtonListener = new restrictButtonListener();
+        weeklyPlanButton.setOnClickListener(wButtonListener);
+        restrictModeButton.setOnClickListener(rButtonListener);
+        //버튼 리스터 객체 선언 및 설정
+
+        date = new Date();
+        //final String today = date.toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년MM월dd일");
+        String today = sdf.format(date);
+        todayView.setText(today);
+
         plnDBC = new PlanDBController(this);
         tskDBC = new TaskDBController(this);
         sHrDBC = new StudyHourDBController(this);
@@ -68,26 +95,13 @@ public class MainActivity extends AppCompatActivity {
         plnDBC.SelectAll();
         tskDBC.SelectAll();
         sHrDBC.SelectAll();
-        plnDBC.close();
-        tskDBC.close();
-        sHrDBC.close();
+        ContinuousTime = sHrDBC.sync(today);
+        int hour = ContinuousTime / 3600;
+        int minute = (ContinuousTime % 3600) / 60;
+        int second = (ContinuousTime % 3600) % 60;
+        String time = hour + ":" + minute + ":" + second;
         //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
-
-        today =  (TextView)findViewById(R.id.today);
-        weeklyPlanButton = (Button)findViewById(R.id.weeklyPlanButton);
-        restrictModeButton = (Button)findViewById(R.id.restrictModeButton);
-        //xml 상에 있는 요소들 불러오기
-
-        restrictIntent = new Intent(getApplicationContext(), RestrictActivity.class);
-        weeklyIntent = new Intent(getApplicationContext(), WeeklyPlannerActivity.class);
-        //인텐트 객체들 선언
-
-        weeklyButtonListener wButtonListener = new weeklyButtonListener();
-        restrictButtonListener rButtonListener = new restrictButtonListener();
-        weeklyPlanButton.setOnClickListener(wButtonListener);
-        restrictModeButton.setOnClickListener(rButtonListener);
-        //버튼 리스터 객체 선언 및 설정
-
+        Log.d("MainActivity","ContinuousTime : "+time);
 
     }
 }

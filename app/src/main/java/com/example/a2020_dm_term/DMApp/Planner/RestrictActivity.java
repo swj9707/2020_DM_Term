@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.a2020_dm_term.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,6 +34,8 @@ public class RestrictActivity extends AppCompatActivity {
     private int second;
     private int minute;
     private int hour;
+    private Date date;
+    private String today;
     //Timer 관련 필드값들
 
     private IntentFilter intentFilter;
@@ -94,6 +98,10 @@ public class RestrictActivity extends AppCompatActivity {
         RButtonListener ExitListener = new RButtonListener();
         button.setOnClickListener(ExitListener);
         //위에서 설명한 종료 버튼 리스너를 선언 후 Input
+
+        date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년MM월dd일");
+        today = sdf.format(date);
 
         screenOnReceiver = new ScreenOnReceiver();
         intentFilter = new IntentFilter();
@@ -204,5 +212,7 @@ public class RestrictActivity extends AppCompatActivity {
             }
         };
         handler.post(updater);
+        MainActivity.sHrDBC.insertColumn(today,Integer.toString(elapsedTime));
+        MainActivity.sHrDBC.SelectAll();
     }
 }

@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Intent weeklyIntent;
     public static PlanDBController plnDBC;
     public static TaskDBController tskDBC;
+    public static StudyHourDBController sHrDBC;
 
 
     class weeklyButtonListener implements View.OnClickListener{
@@ -48,12 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
         plnDBC = new PlanDBController(this);
         tskDBC = new TaskDBController(this);
+        sHrDBC = new StudyHourDBController(this);
+
         plnDBC.open();
         plnDBC.create();
 
         tskDBC.open();
         tskDBC.create();
 
+        sHrDBC.open();
+        sHrDBC.create();
         //데이터베이스 컨트롤러 불러온 다음 데이터베이스 세팅하기
         //Open -> Create -> Close 사이클인 이유는
         //create -> open 같은 경우는 에러 남
@@ -62,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         //그래도 혹시나 모르는 에러를 방지하기 위함
         plnDBC.SelectAll();
         tskDBC.SelectAll();
+        sHrDBC.SelectAll();
         plnDBC.close();
         tskDBC.close();
+        sHrDBC.close();
         //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
 
         today =  (TextView)findViewById(R.id.today);

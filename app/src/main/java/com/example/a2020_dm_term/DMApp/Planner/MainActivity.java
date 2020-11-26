@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         //그날 공부 총 지속 시간을 계산 해 내는 코드
         //방법은 간단하니 생략하도록 하겠음
         Log.d("MainActivity","ContinuousTime : "+time);
-
+        //이 밑으로 형우꺼
         //시간표 생성
         timeTable = findViewById(R.id.main_time_table);
         CustomTextView[] dummies = new CustomTextView[5];

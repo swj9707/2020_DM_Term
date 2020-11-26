@@ -113,29 +113,13 @@ public class MainActivity extends AppCompatActivity {
         매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
         초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
         * */
-        int hour = ContinuousTime / 3600;
-        int minute = (ContinuousTime % 3600) / 60;
-        int second = (ContinuousTime % 3600) % 60;
-        String time = hour + ":" + minute + ":" + second;
+        int Hr = ContinuousTime / 3600;
+        int Min = (ContinuousTime % 3600) / 60;
+        int Sec = (ContinuousTime % 3600) % 60;
+        String time = Hr + ":" + Min + ":" + Sec;
         //그날 공부 총 지속 시간을 계산 해 내는 코드
         //방법은 간단하니 생략하도록 하겠음
         Log.d("MainActivity","ContinuousTime : "+time);
-
-        today = (TextView) findViewById(R.id.today);
-        weeklyPlanButton = (Button) findViewById(R.id.weeklyPlanButton);
-        restrictModeButton = (Button) findViewById(R.id.restrictModeButton);
-        //xml 상에 있는 요소들 불러오기
-
-        restrictIntent = new Intent(getApplicationContext(), RestrictActivity.class);
-        weeklyIntent = new Intent(getApplicationContext(), WeeklyPlannerActivity.class);
-        //인텐트 객체들 선언
-
-        weeklyButtonListener wButtonListener = new weeklyButtonListener();
-        restrictButtonListener rButtonListener = new restrictButtonListener();
-        weeklyPlanButton.setOnClickListener(wButtonListener);
-        restrictModeButton.setOnClickListener(rButtonListener);
-        //버튼 리스터 객체 선언 및 설정
-
 
         //시간표 생성
         timeTable = findViewById(R.id.main_time_table);

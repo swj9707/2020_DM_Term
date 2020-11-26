@@ -48,7 +48,6 @@
                 </RelativeLayout>
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>
-        <!--이 아저씨는 일단 예시용 ㅇㅇ 뜯어고쳐야됨-->
         <Button
                 android:id="@+id/restrictModeButton"
                 android:layout_width="390dp"

@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         timeTable = findViewById(R.id.main_time_table);
         CustomTextView[] dummies = new CustomTextView[5];
 
+        //더미 데이터 5개
         dummies[0] = new CustomTextView(this, 1);
         dummies[0].task = new TaskBlock();
         dummies[0].task.period = 3;
@@ -215,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        //데이터 로드 & 적용
         for (CustomTextView item : dummies) {
             int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
             mergeCells(item.task.period, id);

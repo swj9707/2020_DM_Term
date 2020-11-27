@@ -100,9 +100,7 @@ public class MainActivity extends AppCompatActivity {
         //데이터베이스 컨트롤러 불러온 다음 데이터베이스 세팅하기
         //Open -> Create -> Close 사이클인 이유는
         //create -> open 같은 경우는 에러 남
-        //일단 열어보고 없으면 만들고 close해줘야함
-        //close 하는 이유는 -> 계속 열어둔다 해도 이 앱에선 뭐 상관없겠지만
-        //그래도 혹시나 모르는 에러를 방지하기 위함
+
         plnDBC.SelectAll();
         tskDBC.SelectAll();
         sHrDBC.SelectAll();
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         //그날 공부 총 지속 시간을 계산 해 내는 코드
         //방법은 간단하니 생략하도록 하겠음
         Log.d("MainActivity","ContinuousTime : "+time);
-
+        //이 밑으로 형우꺼
         //시간표 생성
         timeTable = findViewById(R.id.main_time_table);
         CustomTextView[] dummies = new CustomTextView[5];

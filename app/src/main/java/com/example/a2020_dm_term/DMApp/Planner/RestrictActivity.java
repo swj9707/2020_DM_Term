@@ -162,12 +162,6 @@ public class RestrictActivity extends AppCompatActivity {
         }, 1000);
         super.onStop();
     }
-    /*
-    @Override
-    protected  void onPause(){
-        TT.cancel();
-        super.onPause();
-    }*/
 
     @Override
     protected void onRestart(){

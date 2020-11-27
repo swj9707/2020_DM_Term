@@ -4,8 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#003458"
-        >
+        android:background="#313335"
+>
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
                 android:layout_above="@+id/restrict_title"
                 android:textSize="15sp"
                 android:layout_weight="1"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/secondary_text_dark"
         >
         </TextView>
         <TextView
@@ -32,7 +32,7 @@
                 android:layout_above="@+id/restrict_title"
                 android:textSize="15sp"
                 android:layout_weight="1"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/secondary_text_dark"
         >
         </TextView>
     </LinearLayout>
@@ -41,10 +41,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="방해금지모드가 작동중입니다!"
+            android:text="방해금지모드가 작동중입니다."
             android:gravity="center"
             android:textSize="20sp"
-            android:textColor="@android:color/white">
+            android:textColor="@android:color/secondary_text_dark">
     </TextView>
     <Button
             android:id="@+id/stopButton"
@@ -54,8 +54,8 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
             android:text="방해금지모드 종료"
-            android:textColor="@android:color/white"
-            android:background="@android:color/background_dark">
+            android:textColor="@android:color/secondary_text_dark"
+            android:background="@drawable/edge" android:paddingLeft="20dp" android:paddingRight="20dp">
     </Button>
 
 

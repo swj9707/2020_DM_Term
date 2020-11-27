@@ -27,8 +27,8 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     RelativeLayout timeTable;
     final int TASK_BLOCK = 0;
     final int TABLE_CELL = 1;
-    ArrayList<CustomTextView> taskList = new ArrayList<CustomTextView>();
-    ArrayList<CustomTextView> blockList = new ArrayList<CustomTextView>();
+    ArrayList<CustomTextView> taskList = new ArrayList<CustomTextView>();//배치된 작업 목록
+    ArrayList<CustomTextView> blockList = new ArrayList<CustomTextView>();//생성된 블럭 목록
 
     int CELL_WIDTH;
     int CELL_HEIGHT;
@@ -38,6 +38,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weeklyplan);
 
+        //시간표 셀 크기
         CELL_WIDTH = dp2px(70);
         CELL_HEIGHT = dp2px(70);
 
@@ -46,7 +47,16 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         timeTable = findViewById(R.id.time_table);
         timeTable.setBackgroundColor(Color.BLACK);
 
+        /*
+        시간표 생성
+        테이블 레이아웃으로 표현할 수 있지만 세로로 셀병합과 분리가 불가능하기 때문에 상대적 레이아웃으로 구현 
+        시간표 셀들의 아이디는 행 * 10 + 열로 배정해서 원하는 셀에 직접 접근할 수 있음
+        주의할 점은 (1,1)부터 시작되기 때문에 원하는 시간과 요일 값에 1을 더해줘야할 필요가 있음
+        timeTable의 배경을 검정으로 설정하고 셀들의 마진을 1dp씩 설정해서 테두리를 표시하고 셀들은 흰색으로 설정
+        */
+
         for (int hour = 1; hour <= 24; hour++) {
+            //행의 가장 첫 셀 시간을 나타내는 인덱스 생성
             TextView rowIndex = new TextView(this);
             rowIndex.setText(Integer.toString(hour - 1));
             rowIndex.setGravity(Gravity.CENTER);
@@ -55,7 +65,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
 
             RelativeLayout.LayoutParams idx_params = new RelativeLayout.LayoutParams(dp2px(20), CELL_HEIGHT);
             idx_params.setMargins(0, dp2px(1), 0, 0);
-            if (hour == 1)
+            if (hour == 1)//좌측 상단의 빈 셀을 기준으로 차례로 아래에 연결한다.
                 idx_params.addRule(RelativeLayout.BELOW, R.id.blank);
             else
                 idx_params.addRule(RelativeLayout.BELOW, (hour - 1) * 10);
@@ -71,7 +81,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 params.setMargins(dp2px(1) * day + CELL_WIDTH * (day - 1), 0, 0, dp2px(1));
 
                 cell.setId(hour * 10 + day);
-                cell.setOnDragListener(new myOnDragListener());
+                cell.setOnDragListener(new myOnDragListener());//timeTable 위에서 다른 일정으로 배치할 수 있도록 드래스 리스너 등록
                 cell.setGravity(Gravity.CENTER);
                 cell.setBackgroundColor(Color.WHITE);
                 cell.setLayoutParams(params);
@@ -111,7 +121,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         Button cancel = dialog.findViewById(R.id.add_cancel);
 
         final EditText task_name = dialog.findViewById(R.id.task_title);
-        final NumberPicker numberPicker = dialog.findViewById(R.id.numberPicker);
+        final NumberPicker numberPicker = dialog.findViewById(R.id.numberPicker);//작업 시간 설정
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(24);
 
@@ -120,8 +130,12 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 System.out.println("confirm button is clicked.");
                 task.title = task_name.getText().toString();
+                if (task.title == null) {//제목 설정하지 않으면 무시
+                    Toast.makeText(getApplicationContext(), "제목을 설정해주세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 task.period = numberPicker.getValue();
-                dialog.dismiss();
+
                 CustomTextView newBtn = new CustomTextView(context, TASK_BLOCK);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(100), dp2px(100));
                 params.setMargins(dp2px(10), dp2px(10), dp2px(10), dp2px(10));
@@ -132,11 +146,12 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 newBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.edge));
                 newBtn.setLayoutParams(params);
 
-                setDrag(newBtn);
-                setDeleteDialog(newBtn);
+                setDrag(newBtn);//배치된 일정을 드래그해서 다른 시간에 배치할 수 있도록 롱클릭 이벤트 설정
+                setDeleteDialog(newBtn);//클릭하면 일정을 삭제할 수 있도록 이벤트 설정
                 blockList.add(newBtn);
 
                 task_layout.addView(newBtn);
+                dialog.dismiss();
             }
         });
         //컨펌 버튼 눌렀을 때 액션 리스너
@@ -152,25 +167,27 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void setDeleteDialog(final CustomTextView customView) {
+    public void setDeleteDialog(final CustomTextView customView) {//클릭된 뷰를 삭제
         customView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);//확인 팝업창
                 builder.setTitle("삭제");
                 builder.setMessage("일정을 삭제하시겠습니까?");
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         switch (customView.type) {
-                            case TABLE_CELL:
-                                splitCell(customView.task.period, customView.getId());
+                            case TABLE_CELL://테이블에 배치된 작업인 경우
+                                splitCell(customView.task.period, customView.getId());//셀 분할
                                 taskList.remove((CustomTextView) v);
+                                //설정된 값들을 빈 값으로 변경하고 할당된 이벤트들을 모두 삭제함
                                 customView.task = null;
                                 customView.droppable = true;
                                 customView.setOnClickListener(null);
                                 customView.setOnLongClickListener(null);
                                 break;
-                            case TASK_BLOCK:
+                            case TASK_BLOCK://테이블에 드롭할 블럭인 경우
+                                //뷰 삭제
                                 task_layout.removeView(customView);
                                 blockList.remove((CustomTextView) v);
                                 break;
@@ -185,13 +202,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         });
     }
 
-    public void setDrag(View view1) {
+    public void setDrag(View view1) {//드래그 시작하기 위해 롱클릭 이벤트 설정
         view1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view2) {
                 CustomTextView customTextView = (CustomTextView) view2;
-                View.DragShadowBuilder shadow = new myDragShadowBuilder(view2);
-                view2.startDragAndDrop(null, shadow, customTextView, 0);//(전달할 데이터, 그림자 생성자, 전달할 데이터(로컬), 플래그
+                View.DragShadowBuilder shadow = new myDragShadowBuilder(view2);//드래그 시 생성되는 그림자 설정
+                view2.startDragAndDrop(null, shadow, customTextView, 0);//그래그시 전달할 데이터 설정. CustomTextView 객체를 전달
+                //(전달할 데이터(클립보드), 그림자 생성자, 전달할 데이터(로컬), 플래그
                 //local state = When dispatching drag events to views in the same activity this object will be available through getLocalState().
                 return false;
             }
@@ -201,7 +219,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     class myOnDragListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View view, DragEvent event) {
-            final CustomTextView targetCell = (CustomTextView) view;
+            final CustomTextView targetCell = (CustomTextView) view;//드롭된 위치에 있는 목표 셀
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     //System.out.println(v.getId() + " ACTION_DRAG_STARTED");
@@ -216,16 +234,15 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     int row = targetCell.getId() / 10;
                     int column = targetCell.getId() % 10;
 
-
                     boolean ext = false;
-                    CustomTextView droppedCell = (CustomTextView) event.getLocalState();
+                    CustomTextView droppedCell = (CustomTextView) event.getLocalState();//드랍했을 때 전달되는 데이터
 
-                    if (24 - row + 1 < droppedCell.task.period) {
+                    if (24 - row + 1 < droppedCell.task.period) {//배치된 작업이 테이블 범위를 벗어나는지 검사
                         Toast.makeText(getApplicationContext(), "배치가 범위를 벗어납니다.", Toast.LENGTH_SHORT).show();
                         break;
                     }
 
-                    for (int i = 0; i <= droppedCell.task.period - 1; i++) {
+                    for (int i = 0; i <= droppedCell.task.period - 1; i++) {//배치된 작업이 다른 일정을 겹치는지 검사
                         CustomTextView belowCell = (CustomTextView) findViewById(view.getId() + i * 10);
                         if (!belowCell.droppable) {
                             Toast.makeText(getApplicationContext(), "다른 일정과 겹칩니다.", Toast.LENGTH_SHORT).show();
@@ -236,6 +253,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     if (ext)
                         break;
 
+                    //드롭되었을 때 목표 셀에 정보 설정하고 이벤트 등록
                     targetCell.setText(droppedCell.task.title);
                     targetCell.droppable = false;
                     targetCell.task = droppedCell.task;
@@ -244,6 +262,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     setDrag(targetCell);
                     setDeleteDialog(targetCell);
 
+                    //만약 배치된 일정을 다른 시간으로 변경하는 경우 설정된 정보, 이벤트 초기화
                     if (droppedCell.type == TABLE_CELL) {
                         splitCell(droppedCell.task.period, droppedCell.getId());
                         droppedCell.task = null;
@@ -252,11 +271,12 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                         droppedCell.setOnClickListener(null);
                     }
 
-                    if (taskList.indexOf(targetCell) == -1)
+                    if (taskList.indexOf(targetCell) == -1)//taskList에 등록이 안되어 있으면 등록
                         taskList.add(targetCell);
 
                     System.out.println(view.getId() + " ACTION_DROP period: " + targetCell.task.period + " hour: " + (row - 1));
 
+                    //1시간 작업인 경우 셀 병합 작업을 거치지 않고 종료 외에는 셀 병합작업을 수행
                     if (targetCell.task.period == 1)
                         break;
                     mergeCells(targetCell.task.period, view.getId());
@@ -269,39 +289,41 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         }
     }
 
-    public void mergeCells(int period, int id) {
+    public void mergeCells(int period, int id) {//셀 병합 작업
         CustomTextView cell = (CustomTextView) findViewById(id);
-        for (int i = 1; i <= period - 1; i++)
+        for (int i = 1; i <= period - 1; i++)//period의 길이만큼 드롭된 위치에서 아래 셀을 모두 삭제
             timeTable.removeView(findViewById(id + i * 10));
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cell.getLayoutParams();
-        params.height = period * cell.getHeight() + (period - 1) * dp2px(1);
+        params.height = period * cell.getHeight() + (period - 1) * dp2px(1);//셀 길이 증가
         cell.setLayoutParams(params);
     }
 
-    public void splitCell(int period, int id) {
-        CustomTextView currentCell = (CustomTextView) findViewById(id);
+    public void splitCell(int period, int id) {//병합된 셀을 다시 분리하고 데이터를 초기화
+        CustomTextView currentCell = (CustomTextView) findViewById(id);//분할되지 않은 셀
         currentCell.droppable = true;
         currentCell.setText("");
+        //설정 초기화
 
+        //셀 폭, 높이 설정. 최좌측의 인덱스 셀을 기준으로 상단, 우측 배열
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(CELL_WIDTH, CELL_HEIGHT);
         params.addRule(RelativeLayout.RIGHT_OF, id / 10 * 10);
         params.addRule(RelativeLayout.ALIGN_TOP, id / 10 * 10);
-        params.setMargins(dp2px(1) * (id % 10) + CELL_WIDTH * ((id % 10) - 1), 0, 0, dp2px(1));
+        params.setMargins(dp2px(1) * (id % 10) + CELL_WIDTH * ((id % 10) - 1), 0, 0, dp2px(1));//마진 값 설정
 
         currentCell.setLayoutParams(params);
-
-        for (int i = 1; i < period; i++) {
+        
+        for (int i = 1; i < period; i++) {//현재 셀의 하단에 있는 셀들을 새로 생성하고 초기화
             CustomTextView newCell = new CustomTextView(this, TABLE_CELL);
             int newId = id + (10 * i);
             newCell.setId(newId);
 
             params = new RelativeLayout.LayoutParams(CELL_WIDTH, CELL_HEIGHT);
             params.setMargins(dp2px(1) * (id % 10) + CELL_WIDTH * ((id % 10) - 1), 0, 0, dp2px(1));
-            int targetId = newId / 10 * 10;
+            int targetId = newId / 10 * 10;//최좌측 인덱스의 아이디
             params.addRule(RelativeLayout.RIGHT_OF, targetId);
             params.addRule(RelativeLayout.ALIGN_TOP, targetId);
 
-            newCell.setOnDragListener(new myOnDragListener());
+            newCell.setOnDragListener(new myOnDragListener());//드래그를 받을 수 있는 리스너 등록
             newCell.setGravity(Gravity.CENTER);
             newCell.setBackgroundColor(Color.WHITE);
             newCell.setLayoutParams(params);
@@ -310,14 +332,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         }
     }
 
-    public int dp2px(int dp) {
+    public int dp2px(int dp) {//dp값을 px값으로 변경하는 함수
         float scale = getResources().getDisplayMetrics().density;
         int px = (int) (dp * scale + 0.5f);
         return px;
     }
 }
 
-class myDragShadowBuilder extends View.DragShadowBuilder {//드래그 시 이미지 생성
+class myDragShadowBuilder extends View.DragShadowBuilder {//드래그 시 그림자 생성하는 클래스
     private static Drawable shadow;
 
     public myDragShadowBuilder(View view) {
@@ -325,7 +347,7 @@ class myDragShadowBuilder extends View.DragShadowBuilder {//드래그 시 이미
         shadow = new ColorDrawable(Color.LTGRAY);
     }
 
-    public void onProvideShadowMetrics(Point size, Point touch) {
+    public void onProvideShadowMetrics(Point size, Point touch) {//그림자 이미지 설정(크기, 위치)
         int width, height;
         width = getView().getWidth();
         height = getView().getHeight();
@@ -336,8 +358,7 @@ class myDragShadowBuilder extends View.DragShadowBuilder {//드래그 시 이미
         int[] location = new int[2];
         getView().getLocationOnScreen(location);
 
-        touch.set(width / 2, height / 2);//터치한 위치 아래에 생성되는 이미지 내부의 좌표(=이미지 시작 점)
-        //빈 화면에 드롭했을 때 그림자가 돌아가는 모션이 부자연스러워 차후 수정할 것.
+        touch.set(width / 2, height / 2);//터치한 위치 아래에 생성되는 그림자 내부의 좌표
     }
 
     public void onDrawShadow(Canvas canvas) {

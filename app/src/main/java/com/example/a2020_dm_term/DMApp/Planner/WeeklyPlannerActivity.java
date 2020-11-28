@@ -204,6 +204,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
 
     public void uploadPlnDB() {
         MainActivity.plnDBC.deleteAllColumns();
+        //MainActivity.plnDBC.mDB.
         //컨펌 하는 순간 현재 저장되어 있는 모든 정보들은 자동 삭제
         for (CustomTextView element : taskList) {
             //이후 taskList 내에 있는 모든 정보들로 다시 갱신해줌

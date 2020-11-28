@@ -100,12 +100,13 @@ public class MainActivity extends AppCompatActivity {
         //create -> open 같은 경우는 에러 남
 
         SyncDB_Date();//DB와 날짜, 공부 시간 등을 동기화 해주는 메서드
-        mkTimeTable();
+        //mkTimeTable();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mkTimeTable();
         SyncDB_Date();
         for (CustomTextView item : taskList) {
             int id = (item.task.hour) * 10 + (item.task.day);
@@ -118,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
     public void mkTimeTable() {
         //시간표 생성
         timeTable = findViewById(R.id.main_time_table);
-
+        int blank_id = R.id.blank;
+        timeTable.removeAllViews();
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -130,10 +132,17 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(nested_width, nested_height);
         nestedScrollView.setLayoutParams(layoutParams);
 
+        TextView blank = new TextView(this);
+        RelativeLayout.LayoutParams blank_param = new RelativeLayout.LayoutParams(dp2px(20), dp2px(20));
+        blank_param.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.ALIGN_PARENT_TOP);
+        blank.setLayoutParams(blank_param);
+        blank.setId(blank_id);
+        blank.setBackgroundColor(Color.parseColor("#3C3F41"));
+        timeTable.addView(blank);
 
         int idx = 0;
         for (String day : new String[]{"일", "월", "화", "수", "목", "금", "토"}) {
-            RelativeLayout.LayoutParams day_params = new RelativeLayout.LayoutParams(CELL_SIZE, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams day_params = new RelativeLayout.LayoutParams(CELL_SIZE, dp2px(20));
             day_params.setMargins(dp2px(1) * (idx + 1) + CELL_SIZE * idx, 0, 0, 0);
             day_params.addRule(RelativeLayout.RIGHT_OF, R.id.blank);
             day_params.addRule(RelativeLayout.ALIGN_TOP, R.id.blank);

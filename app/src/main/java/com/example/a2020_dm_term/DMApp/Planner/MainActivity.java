@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         //create -> open 같은 경우는 에러 남
 
         SyncDB_Date();//DB와 날짜, 공부 시간 등을 동기화 해주는 메서드
-
         mkTimeTable();
     }
 
@@ -186,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SyncDB_Date() {
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
         String today = sdf.format(date);
         todayView.setText(today);

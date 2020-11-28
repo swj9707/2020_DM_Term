@@ -56,25 +56,6 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         timeTable.setBackgroundColor(Color.BLACK);
 
         testData();
-
-        //더이 데이터 추가
-        //CustomTextView dummy_task = new CustomTextView(this, 1);
-        /*
-        dummy_task.droppable = 0;
-        dummy_task.task.hour = 1;
-        dummy_task.task.period = 5;
-        dummy_task.task.day = 2;
-        dummy_task.task.title = "dummy";
-        taskList.add(dummy_task);
-
-        CustomTextView dummy_block = new CustomTextView(this, 0);
-        dummy_block.droppable = 1;
-        dummy_block.task.hour = -1;
-        dummy_block.task.period = 5;
-        dummy_block.task.day = -1;
-        dummy_block.task.title = "dummy";
-        blockList.add(dummy_block);*/
-
         mkTimeTable();
 
         Button main_confirm = findViewById(R.id.week_confirm);

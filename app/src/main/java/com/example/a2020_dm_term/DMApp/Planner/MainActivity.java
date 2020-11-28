@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import com.example.a2020_dm_term.R;
 import com.example.a2020_dm_term.DMApp.DB.*;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,6 +28,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     Context context;
     TextView todayView;
+    TextView studyTimeView;
     Button weeklyPlanButton;
     Button restrictModeButton;
     Intent restrictIntent;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         //레이아웃 불러오기
 
         todayView = (TextView) findViewById(R.id.today);
+        studyTimeView = (TextView) findViewById(R.id.studyTime);
         weeklyPlanButton = (Button) findViewById(R.id.weeklyPlanButton);
         restrictModeButton = (Button) findViewById(R.id.restrictModeButton);
         //xml 상에 있는 요소들 불러오기
@@ -93,79 +96,21 @@ public class MainActivity extends AppCompatActivity {
 
         plnDBC.open();
         plnDBC.create();
-
         tskDBC.open();
         tskDBC.create();
-
         sHrDBC.open();
         sHrDBC.create();
         //데이터베이스 컨트롤러 불러온 다음 데이터베이스 세팅하기
         //Open -> Create -> Close 사이클인 이유는
         //create -> open 같은 경우는 에러 남
 
-        plnDBC.SelectAll();
-        tskDBC.SelectAll();
-        sHrDBC.SelectAll();
-        //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
-        ContinuousTime = sHrDBC.sync(today);
-        /*
-        Sync 메서드 설명
-        매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
-        초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
-        * */
-        int Hr = ContinuousTime / 3600;
-        int Min = (ContinuousTime % 3600) / 60;
-        int Sec = (ContinuousTime % 3600) % 60;
-        String time = Hr + ":" + Min + ":" + Sec;
-        //그날 공부 총 지속 시간을 계산 해 내는 코드
-        //방법은 간단하니 생략하도록 하겠음
-        Log.d("MainActivity", "ContinuousTime : " + time);
+        SyncDB_Date();//DB와 날짜, 공부 시간 등을 동기화 해주는 메서드
+
+
         //이 밑으로 형우꺼
         //시간표 생성
         timeTable = findViewById(R.id.main_time_table);
-        CustomTextView[] dummies = new CustomTextView[5];
 
-        //더미 데이터 5개
-        dummies[0] = new CustomTextView(this, 1);
-        dummies[0].task = new TaskBlock();
-        dummies[0].task.period = 3;
-        dummies[0].task.day = 2;
-        dummies[0].task.hour = 0;
-        dummies[0].task.title = "dummy1";
-
-        dummies[1] = new CustomTextView(this, 1);
-        dummies[1].task = new TaskBlock();
-        dummies[1].task.period = 1;
-        dummies[1].task.day = 2;
-        dummies[1].task.hour = 5;
-        dummies[1].task.title = "dummy2";
-
-        dummies[2] = new CustomTextView(this, 1);
-        dummies[2].task = new TaskBlock();
-        dummies[2].task.period = 5;
-        dummies[2].task.day = 0;
-        dummies[2].task.hour = 0;
-        dummies[2].task.title = "dummy3";
-
-        dummies[3] = new CustomTextView(this, 1);
-        dummies[3].task = new TaskBlock();
-        dummies[3].task.period = 2;
-        dummies[3].task.day = 0;
-        dummies[3].task.hour = 5;
-        dummies[3].task.title = "dummy4";
-
-        dummies[4] = new CustomTextView(this, 1);
-        dummies[4].task = new TaskBlock();
-        dummies[4].task.period = 1;
-        dummies[4].task.day = 5;
-        dummies[4].task.hour = 2;
-        dummies[4].task.title = "dummy5";
-
-
-        //이걸 참고해서 데이터베이스에서 정보들을 가져오면 된다.
-        /*for (CustomTextView item : dummies)
-            taskList.add(item);*/
-        downloadPlnDB();
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -237,7 +182,41 @@ public class MainActivity extends AppCompatActivity {
             cell.setText(item.task.title);
         }
     }
+    @Override
+    public void onResume(){
+        super.onResume();
 
+    }
+
+    public void SyncDB_Date(){
+        date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
+        String today = sdf.format(date);
+        todayView.setText(today);
+
+        plnDBC.SelectAll();
+        tskDBC.SelectAll();
+        sHrDBC.SelectAll();
+        //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
+        ContinuousTime = sHrDBC.sync(today);
+        /*
+        Sync 메서드 설명
+        매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
+        초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
+        * */
+        String time = CalculateTime(ContinuousTime);
+        //그날 공부 총 지속 시간을 계산 해 내는 코드
+        //방법은 간단하니 생략하도록 하겠음
+        Log.d("MainActivity", "ContinuousTime : " + time);
+        downloadPlnDB();
+    }
+
+    public String CalculateTime(int ContinuousTime){
+        int Hr = ContinuousTime / 3600;
+        int Min = (ContinuousTime % 3600) / 60;
+        int Sec = (ContinuousTime % 3600) % 60;
+        return Hr + ":" + Min + ":" + Sec;
+    }
 
     public void mergeCells(int period, int id) {
         CustomTextView cell = (CustomTextView) findViewById(id);
@@ -264,12 +243,14 @@ public class MainActivity extends AppCompatActivity {
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            CustomTextView element = new CustomTextView(context, Type);
-            element.task.title = Title;
-            element.droppable = Droppable;
-            element.task.period = Period;
-            element.task.hour = Hour;
-            element.task.day = Day;
+            Log.d("DownLoadPlanDB","Type:"+Type
+                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
+            CustomTextView element = new CustomTextView(this, Type);
+            element.task.setTitle(Title);
+            element.setDroppable(Droppable);
+            element.task.setPeriod(Period);
+            element.task.setHour(Hour);
+            element.task.setDay(Day);
             taskList.add(element);
         }
     }

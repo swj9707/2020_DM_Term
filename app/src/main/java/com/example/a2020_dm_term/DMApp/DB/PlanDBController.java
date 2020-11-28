@@ -123,7 +123,7 @@ public class PlanDBController {
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            Log.d("","_id:"+_id+" ,Type:"+Type
+            Log.d("PlanDBController","_id:"+_id+" ,Type:"+Type
                     +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
         }
     }

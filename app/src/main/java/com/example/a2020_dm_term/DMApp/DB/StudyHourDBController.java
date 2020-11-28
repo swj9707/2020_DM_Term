@@ -112,7 +112,7 @@ public class StudyHourDBController {
             int _id = c.getInt(0);
             String Date = c.getString(1);
             String Continuous = c.getString(2);
-            Log.d("", "_id:" + _id + " ,Date:" + Date
+            Log.d("StudyHourDBController", "_id:" + _id + " ,Date:" + Date
                     + " ,Continuous:" + Continuous);
         }
     }

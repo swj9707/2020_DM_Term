@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -165,12 +166,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            CustomTextView element = new CustomTextView(context, Type);
-            element.task.title = Title;
-            element.droppable = Droppable;
-            element.task.period = Period;
-            element.task.hour = Hour;
-            element.task.day = Day;
+            Log.d("DownLoadPlanDB","Type:"+Type
+                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
+            CustomTextView element = new CustomTextView(this, Type);
+            element.task.setTitle(Title);
+            element.setDroppable(Droppable);
+            element.task.setPeriod(Period);
+            element.task.setHour(Hour);
+            element.task.setDay(Day);
             taskList.add(element);
         }
     }
@@ -183,12 +186,14 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            CustomTextView element = new CustomTextView(context, Type);
-            element.task.title = Title;
-            element.droppable = Droppable;
-            element.task.period = Period;
-            element.task.hour = Hour;
-            element.task.day = Day;
+            Log.d("DownLoadTaskDB","Type:"+Type
+                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
+            CustomTextView element = new CustomTextView(this, Type);
+            element.task.setTitle(Title);
+            element.setDroppable(Droppable);
+            element.task.setPeriod(Period);
+            element.task.setHour(Hour);
+            element.task.setDay(Day);
             blockList.add(element);
         }
     }

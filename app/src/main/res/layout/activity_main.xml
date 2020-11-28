@@ -25,6 +25,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="62dp"
+                android:id="@+id/studyTime"
                 android:background="#313335"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp" android:layout_gravity="center_horizontal"

@@ -84,12 +84,6 @@ public class MainActivity extends AppCompatActivity {
         restrictModeButton.setOnClickListener(rButtonListener);
         //버튼 리스터 객체 선언 및 설정
 
-        date = new Date();
-        //final String today = date.toString();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
-        String today = sdf.format(date);
-        todayView.setText(today);
-
         plnDBC = new PlanDBController(this);
         tskDBC = new TaskDBController(this);
         sHrDBC = new StudyHourDBController(this);
@@ -112,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        SyncDB_Date();
         for (CustomTextView item : taskList) {
             int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
             mergeCells(item.task.period, id);
@@ -209,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
         //그날 공부 총 지속 시간을 계산 해 내는 코드
         //방법은 간단하니 생략하도록 하겠음
         Log.d("MainActivity", "ContinuousTime : " + time);
+        studyTimeView.setText("오늘 공부한 시간 : "+time);
         downloadPlnDB();
     }
 

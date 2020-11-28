@@ -56,8 +56,11 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         timeTable = findViewById(R.id.time_table);
         timeTable.setBackgroundColor(Color.BLACK);
 
+        testData();
+
         //더이 데이터 추가
-        CustomTextView dummy_task = new CustomTextView(this, 1);
+        //CustomTextView dummy_task = new CustomTextView(this, 1);
+        /*
         dummy_task.droppable = 0;
         dummy_task.task.hour = 1;
         dummy_task.task.period = 5;
@@ -71,7 +74,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         dummy_block.task.period = 5;
         dummy_block.task.day = -1;
         dummy_block.task.title = "dummy";
-        blockList.add(dummy_block);
+        blockList.add(dummy_block);*/
 
         mkTimeTable();
 
@@ -82,6 +85,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 /*현재 추가한 데이터들 DB에 추가*/
+                testData();
                 uploadPlnDB();
                 uploadTaskDB();
                 finish();
@@ -91,6 +95,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         main_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                testData();
                 finish();
             }
         });
@@ -201,22 +206,44 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         }
     }
 
+    public void testData(){
+        for(CustomTextView element : taskList){
+            Log.d("TaskList Check", "Type:" + element.type
+                    + " ,Title:" + element.task.title + " ,Droppable:" +
+                    element.droppable + " ,Period:" + element.task.period+
+                    " ,Hour:" + element.task.hour + " ,Day:" + element.task.day);
+        }
+        for(CustomTextView element : blockList){
+            Log.d("TaskList Check", "Type:" + element.type
+                    + " ,Title:" + element.task.title + " ,Droppable:" +
+                    element.droppable + " ,Period:" + element.task.period+
+                    " ,Hour:" + element.task.hour + " ,Day:" + element.task.day);
+        }
+
+    }
+
     public void uploadPlnDB() {
         MainActivity.plnDBC.deleteAllColumns();
         //컨펌 하는 순간 현재 저장되어 있는 모든 정보들은 자동 삭제
         for (CustomTextView element : taskList) {
             //이후 taskList 내에 있는 모든 정보들로 다시 갱신해줌
             //foreach 문을 사용
+            Log.d("UploadPlanDB", "Type:" + element.type
+                    + " ,Title:" + element.task.title + " ,Droppable:" +
+                    element.droppable + " ,Period:" + element.task.period+
+                    " ,Hour:" + element.task.hour + " ,Day:" + element.task.day);
             MainActivity.plnDBC.insertColumn(element.type, element.task.title,
                     element.droppable, element.task.period, element.task.hour, element.task.day);
-            //droppable 같은 경우는 SQLITE에서 따로 Boolean을 제공하지 않음
-            //그래서 True or false 를 1 or 0으로 integer 데이터타입으로 변환해서 저장하는 방법을 채택함.
         }
     }
 
     public void uploadTaskDB() {
         MainActivity.tskDBC.deleteAllColumns();
         for (CustomTextView element : blockList) {
+            Log.d("UploadTaskDB", "Type:" + element.type
+                    + " ,Title:" + element.task.title + " ,Droppable:" +
+                    element.droppable + " ,Period:" + element.task.period+
+                    " ,Hour:" + element.task.hour + " ,Day:" + element.task.day);
             MainActivity.tskDBC.insertColumn(element.type, element.task.title,
                     element.droppable, element.task.period, element.task.hour, element.task.day);
         }

@@ -10,6 +10,15 @@ public class CustomTextView extends androidx.appcompat.widget.AppCompatTextView 
     int droppable;//드롭할 수 있는 여부
     TaskBlock task;//배치된 작업의 정보
 
+    /**
+     * 헷깔려서 따로 기록해두는 TaskBlock 내의 정보
+     * int period;
+     * int hour = -1;
+     * int day = -1;
+     * String title;
+     *
+     */
+
     CustomTextView(Context context, int type) {
         super(context);
         this.type = type;

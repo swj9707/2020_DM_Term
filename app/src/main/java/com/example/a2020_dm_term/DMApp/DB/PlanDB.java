@@ -5,16 +5,20 @@ import android.provider.BaseColumns;
 
 public class PlanDB {
     public static final class CreateDB implements BaseColumns {
-        public static final String NAME = "NAME";
-        public static final String CONTENTS = "CONTENTS";
-        public static final String STARTDATE = "STARTDATE";
-        public static final String ENDDATE = "ENDDATE";
+        public static final String TYPE = "TYPE";
+        public static final String TITLE = "TITLE";
+        public static final String DROPPABLE = "DROPPABLE";
+        public static final String PERIOD = "PERIOD";
+        public static final String HOUR = "HOUR";
+        public static final String DAY = "DAY";
         public static final String _TABLENAME1 = "PLAN";
         public static final String _CREATE1 ="create table if not exists "+_TABLENAME1+"("
                 +_ID+" integer primary key autoincrement, "
-                +NAME+" text not null , "
-                +CONTENTS+" text not null , "
-                +STARTDATE+" text not null , "
-                +ENDDATE+" text not null); ";
+                +TYPE+" integer not null , "
+                +TITLE+" text not null , "
+                +DROPPABLE+" integer not null , "
+                +PERIOD+" integer not null , "
+                +HOUR+" integer not null , "
+                +DAY+" integer not null); ";
     }
 }

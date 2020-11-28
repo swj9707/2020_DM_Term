@@ -55,12 +55,14 @@ public class TaskDBController {
     public void close(){mDB.close();}
 
     // Insert DB
-    public long insertColumn(String type, String taskName, String period, String hour){
+    public long insertColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
         ContentValues values = new ContentValues();
-        values.put(TaskDB.CreateDB.TYPE, type);
-        values.put(TaskDB.CreateDB.TASKNAME,taskName);
-        values.put(TaskDB.CreateDB.PERIOD,period);
-        values.put(TaskDB.CreateDB.HOUR,hour);
+        values.put(TaskDB.CreateDB.TYPE, Type);
+        values.put(TaskDB.CreateDB.TITLE, Title);
+        values.put(TaskDB.CreateDB.DROPPABLE, Droppable);
+        values.put(TaskDB.CreateDB.PERIOD, Period);
+        values.put(TaskDB.CreateDB.HOUR, Hour);
+        values.put(TaskDB.CreateDB.DAY, Day);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while (c.moveToNext()){
@@ -76,13 +78,14 @@ public class TaskDBController {
     }
 
     // Update DB
-    public boolean updateColumn(long id, String type, String taskName, String period, String hour){
+    public boolean updateColumn(long id, int Type, String Title, int Droppable, int Period, int Hour, int Day){
         ContentValues values = new ContentValues();
-        values.put(TaskDB.CreateDB.TYPE, type);
-        values.put(TaskDB.CreateDB.TASKNAME,taskName);
-        values.put(TaskDB.CreateDB.PERIOD,period);
-        values.put(TaskDB.CreateDB.HOUR,hour);
-        /*
+        values.put(TaskDB.CreateDB.TYPE, Type);
+        values.put(TaskDB.CreateDB.TITLE, Title);
+        values.put(TaskDB.CreateDB.DROPPABLE, Droppable);
+        values.put(TaskDB.CreateDB.PERIOD, Period);
+        values.put(TaskDB.CreateDB.HOUR, Hour);
+        values.put(TaskDB.CreateDB.DAY, Day);        /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while(c.moveToNext()){
             String Name = c.getString(1);
@@ -101,8 +104,11 @@ public class TaskDBController {
     }
 
     // Delete DB
-    public boolean deleteColumn(long id){
-        return mDB.delete(TaskDB.CreateDB._TABLENAME2, "_id="+id, null) > 0;
+    public boolean deleteColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
+
+        return mDB.delete(TaskDB.CreateDB._TABLENAME2,
+                "TYPE="+Type+"TITLE="+Title+"DROPPABLE="+Droppable+"PERIOD="+Period+"HOUR="+Hour+"DAY="+Day,
+                null) > 0;
     }
     // Select DB
     public Cursor selectColumns(){
@@ -113,12 +119,14 @@ public class TaskDBController {
         Cursor c = selectColumns();
         while(c.moveToNext()){
             int _id = c.getInt(0);
-            String Type = c.getString(1);
-            String TaskName = c.getString(2);
-            String Period = c.getString(3);
-            String Hour = c.getString(4);
+            int Type = c.getInt(1);
+            String Title = c.getString(2);
+            int Droppable = c.getInt(3);
+            int Period = c.getInt(4);
+            int Hour = c.getInt(5);
+            int Day = c.getInt(6);
             Log.d("","_id:"+_id+" ,Type:"+Type
-                    +" ,TaskName:"+TaskName+" ,Period:"+Period+" ,Hour:"+Hour);
+                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
         }
     }
 

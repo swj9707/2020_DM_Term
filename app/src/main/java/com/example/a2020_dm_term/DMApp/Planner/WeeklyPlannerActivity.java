@@ -56,9 +56,91 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         timeTable = findViewById(R.id.time_table);
         timeTable.setBackgroundColor(Color.BLACK);
 
+        //더이 데이터 추가
+        CustomTextView dummy_task = new CustomTextView(this, 1);
+        dummy_task.droppable = 0;
+        dummy_task.task.hour = 1;
+        dummy_task.task.period = 5;
+        dummy_task.task.day = 2;
+        dummy_task.task.title = "dummy";
+        taskList.add(dummy_task);
+
+        CustomTextView dummy_block = new CustomTextView(this, 0);
+        dummy_block.droppable = 1;
+        dummy_block.task.hour = -1;
+        dummy_block.task.period = 5;
+        dummy_block.task.day = -1;
+        dummy_block.task.title = "dummy";
+        blockList.add(dummy_block);
+
+        mkTimeTable();
+
+        Button main_confirm = findViewById(R.id.week_confirm);
+        Button main_cancel = findViewById(R.id.week_cancel);
+
+        main_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*현재 추가한 데이터들 DB에 추가*/
+                uploadPlnDB();
+                uploadTaskDB();
+                finish();
+            }
+        });
+
+        main_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        loadData();
+    }
+
+    public void loadData() {
+        for (CustomTextView item : taskList) {//이전에 생성된 일정 불러오고 배치하기
+            int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
+            timeTable.removeView((CustomTextView) findViewById(id));
+            item.setId(id);
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(CELL_SIZE, CELL_SIZE);
+            params.addRule(RelativeLayout.RIGHT_OF, id / 10 * 10);
+            params.addRule(RelativeLayout.ALIGN_TOP, id / 10 * 10);
+            params.setMargins(dp2px(1) * (id % 10) + CELL_SIZE * (id % 10 - 1), 0, 0, dp2px(1));
+            item.setLayoutParams(params);
+
+            item.setGravity(Gravity.CENTER);
+            item.setBackgroundColor(Color.parseColor("#505355"));
+            item.setTextColor(Color.parseColor("#BEBEBE"));
+            item.setText(item.task.title);
+            setDrag(item);
+            setDeleteDialog(item);
+            timeTable.addView(item);
+            mergeCells(item.task.period, id);
+        }
+
+        for (CustomTextView item : blockList) {//이전에 생성된 블럭 불러오고 배치하기
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(100), dp2px(100));
+            params.setMargins(dp2px(10), dp2px(10), dp2px(10), dp2px(10));
+
+            item.setText(item.task.title + "\n" + item.task.period);
+            item.setGravity(Gravity.CENTER);
+            item.setBackgroundDrawable(getResources().getDrawable(R.drawable.edge));
+            item.setTextColor(Color.parseColor("#BEBEBE"));
+            item.setLayoutParams(params);
+
+            setDrag(item);
+            setDeleteDialog(item);
+            task_layout.addView(item);
+        }
+    }
+
+    public void mkTimeTable() {
         /*
         시간표 생성
-        테이블 레이아웃으로 표현할 수 있지만 세로로 셀병합과 분리가 불가능하기 때문에 상대적 레이아웃으로 구현 
+        테이블 레이아웃으로 표현할 수 있지만 세로로 셀병합과 분리가 불가능하기 때문에 상대적 레이아웃으로 구현
         시간표 셀들의 아이디는 행 * 10 + 열로 배정해서 원하는 셀에 직접 접근할 수 있음
         주의할 점은 (1,1)부터 시작되기 때문에 원하는 시간과 요일 값에 1을 더해줘야할 필요가 있음
         timeTable의 배경을 검정으로 설정하고 셀들의 마진을 1dp씩 설정해서 테두리를 표시하고 셀들은 흰색으로 설정
@@ -115,59 +197,41 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 timeTable.addView(cell);
             }
         }
-        Button main_confirm = findViewById(R.id.week_confirm);
-        Button main_cancel = findViewById(R.id.week_cancel);
-
-        main_confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*현재 추가한 데이터들 DB에 추가*/
-                uploadPlnDB();
-                uploadTaskDB();
-                finish();
-            }
-        });
-
-        main_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("cancel button is clicked.");
-                finish();
-            }
-        });
     }
-    public void uploadPlnDB(){
+
+    public void uploadPlnDB() {
         MainActivity.plnDBC.deleteAllColumns();
         //컨펌 하는 순간 현재 저장되어 있는 모든 정보들은 자동 삭제
-        for(CustomTextView element : taskList){
+        for (CustomTextView element : taskList) {
             //이후 taskList 내에 있는 모든 정보들로 다시 갱신해줌
             //foreach 문을 사용
             MainActivity.plnDBC.insertColumn(element.type, element.task.title,
-                    element.droppable, element.task.period,element.task.hour,element.task.day);
+                    element.droppable, element.task.period, element.task.hour, element.task.day);
             //droppable 같은 경우는 SQLITE에서 따로 Boolean을 제공하지 않음
             //그래서 True or false 를 1 or 0으로 integer 데이터타입으로 변환해서 저장하는 방법을 채택함.
         }
     }
-    public void uploadTaskDB(){
+
+    public void uploadTaskDB() {
         MainActivity.tskDBC.deleteAllColumns();
-        for(CustomTextView element : blockList){
+        for (CustomTextView element : blockList) {
             MainActivity.tskDBC.insertColumn(element.type, element.task.title,
-                    element.droppable, element.task.period,element.task.hour,element.task.day);
+                    element.droppable, element.task.period, element.task.hour, element.task.day);
         }
     }
 
-    public void downloadPlnDB(){
+    public void downloadPlnDB() {
         //프로그램이 시작될 때 TaskList 갱신해주는 메서드
         Cursor c = MainActivity.plnDBC.selectColumns();
-        while(c.moveToNext()) {
+        while (c.moveToNext()) {
             int Type = c.getInt(1);
             String Title = c.getString(2);
             int Droppable = c.getInt(3);
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            Log.d("DownLoadPlanDB","Type:"+Type
-                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
+            Log.d("DownLoadPlanDB", "Type:" + Type
+                    + " ,Title:" + Title + " ,Droppable:" + Droppable + " ,Period:" + Period + " ,Hour:" + Hour + " ,Day:" + Day);
             CustomTextView element = new CustomTextView(this, Type);
             element.task.setTitle(Title);
             element.setDroppable(Droppable);
@@ -177,17 +241,18 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             taskList.add(element);
         }
     }
-    public void downloadTaskDB(){
+
+    public void downloadTaskDB() {
         Cursor c = MainActivity.tskDBC.selectColumns();
-        while(c.moveToNext()){
+        while (c.moveToNext()) {
             int Type = c.getInt(1);
             String Title = c.getString(2);
             int Droppable = c.getInt(3);
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            Log.d("DownLoadTaskDB","Type:"+Type
-                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
+            Log.d("DownLoadTaskDB", "Type:" + Type
+                    + " ,Title:" + Title + " ,Droppable:" + Droppable + " ,Period:" + Period + " ,Hour:" + Hour + " ,Day:" + Day);
             CustomTextView element = new CustomTextView(this, Type);
             element.task.setTitle(Title);
             element.setDroppable(Droppable);
@@ -219,7 +284,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 System.out.println("confirm button is clicked.");
                 task.title = task_name.getText().toString();
                 if (task.title.equals("")) {//제목 설정하지 않으면 무시
-                    Toast.makeText(getApplicationContext(), "제목을 설정해주세요.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "제목을 설정해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 task.period = numberPicker.getValue();
@@ -386,7 +451,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         for (int i = 1; i <= period - 1; i++)//period의 길이만큼 드롭된 위치에서 아래 셀을 모두 삭제
             timeTable.removeView(findViewById(id + i * 10));
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cell.getLayoutParams();
-        params.height = period * cell.getHeight() + (period - 1) * dp2px(1);//셀 길이 증가
+        params.height = period * params.height + (period - 1) * dp2px(1);//셀 길이 증가
         cell.setLayoutParams(params);
     }
 
@@ -403,7 +468,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         params.setMargins(dp2px(1) * (id % 10) + CELL_SIZE * ((id % 10) - 1), 0, 0, dp2px(1));//마진 값 설정
 
         currentCell.setLayoutParams(params);
-        
+
         for (int i = 1; i < period; i++) {//현재 셀의 하단에 있는 셀들을 새로 생성하고 초기화
             CustomTextView newCell = new CustomTextView(this, TABLE_CELL);
             int newId = id + (10 * i);

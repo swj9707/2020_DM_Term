@@ -106,8 +106,21 @@ public class MainActivity extends AppCompatActivity {
 
         SyncDB_Date();//DB와 날짜, 공부 시간 등을 동기화 해주는 메서드
 
+        mkTimeTable();
+    }
 
-        //이 밑으로 형우꺼
+    @Override
+    public void onResume() {
+        super.onResume();
+        for (CustomTextView item : taskList) {
+            int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
+            mergeCells(item.task.period, id);
+            CustomTextView cell = (CustomTextView) findViewById(id);
+            cell.setText(item.task.title);
+        }
+    }
+
+    public void mkTimeTable() {
         //시간표 생성
         timeTable = findViewById(R.id.main_time_table);
 
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(nested_width, nested_height);
         nestedScrollView.setLayoutParams(layoutParams);
+
 
         int idx = 0;
         for (String day : new String[]{"일", "월", "화", "수", "목", "금", "토"}) {
@@ -173,22 +187,9 @@ public class MainActivity extends AppCompatActivity {
                 timeTable.addView(cell);
             }
         }
-
-        //데이터 로드 & 적용
-        for (CustomTextView item : taskList) {
-            int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
-            mergeCells(item.task.period, id);
-            CustomTextView cell = (CustomTextView) findViewById(id);
-            cell.setText(item.task.title);
-        }
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
-
     }
 
-    public void SyncDB_Date(){
+    public void SyncDB_Date() {
         date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
         String today = sdf.format(date);
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         downloadPlnDB();
     }
 
-    public String CalculateTime(int ContinuousTime){
+    public String CalculateTime(int ContinuousTime) {
         int Hr = ContinuousTime / 3600;
         int Min = (ContinuousTime % 3600) / 60;
         int Sec = (ContinuousTime % 3600) % 60;
@@ -243,8 +244,8 @@ public class MainActivity extends AppCompatActivity {
             int Period = c.getInt(4);
             int Hour = c.getInt(5);
             int Day = c.getInt(6);
-            Log.d("DownLoadPlanDB","Type:"+Type
-                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
+            Log.d("DownLoadPlanDB", "Type:" + Type
+                    + " ,Title:" + Title + " ,Droppable:" + Droppable + " ,Period:" + Period + " ,Hour:" + Hour + " ,Day:" + Day);
             CustomTextView element = new CustomTextView(this, Type);
             element.task.setTitle(Title);
             element.setDroppable(Droppable);

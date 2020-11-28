@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void downloadPlnDB() {
+        taskList.clear();
         Cursor c = plnDBC.selectColumns();
         while (c.moveToNext()) {
             int Type = c.getInt(1);

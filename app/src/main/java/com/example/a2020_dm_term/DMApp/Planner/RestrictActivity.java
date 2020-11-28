@@ -79,6 +79,7 @@ public class RestrictActivity extends AppCompatActivity {
         public void onClick(View v) {
             Toast.makeText(getApplicationContext(), "방해금지 모드를 종료합니다.", Toast.LENGTH_SHORT).show();
             timer.cancel();
+            stopTimer();
             finish();
             //더이상의 자세한 설명은 생략한다.
         }

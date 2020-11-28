@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -96,6 +97,8 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 /*현재 추가한 데이터들 DB에 추가*/
+                uploadPlnDbc();
+                uploadTaskDbc();
                 finish();
             }
         });
@@ -108,7 +111,25 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             }
         });
     }
-    //내가 이해하기엔 이 녀석들은 아마 일정 스케쥴 나오는 녀석들이고
+    public void uploadPlnDbc(){
+        MainActivity.plnDBC.deleteAllColumns();
+        //컨펌 하는 순간 현재 저장되어 있는 모든 정보들은 자동 삭제
+        for(CustomTextView element : taskList){
+            //이후 taskList 내에 있는 모든 정보들로 다시 갱신해줌
+            //foreach 문을 사용
+            MainActivity.plnDBC.insertColumn(element.type, element.task.title,
+                    element.droppable ? 1 : 0, element.task.period,element.task.hour,element.task.day);
+            //droppable 같은 경우는 SQLITE에서 따로 Boolean을 제공하지 않음
+            //그래서 True or false 를 1 or 0으로 integer 데이터타입으로 변환해서 저장하는 방법을 채택함.
+        }
+    }
+    public void uploadTaskDbc(){
+        MainActivity.tskDBC.deleteAllColumns();
+        for(CustomTextView element : blockList){
+            MainActivity.tskDBC.insertColumn(element.type, element.task.title,
+                    element.droppable ? 1 : 0, element.task.period,element.task.hour,element.task.day);
+        }
+    }
 
     public void addBtnOnClick(View view) {//추가 버튼 눌렀을 시 동작
         System.out.println("add btn onclick");
@@ -137,9 +158,11 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 task.period = numberPicker.getValue();
 
                 CustomTextView newBtn = new CustomTextView(context, TASK_BLOCK);
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp2px(100), dp2px(100));
                 params.setMargins(dp2px(10), dp2px(10), dp2px(10), dp2px(10));
                 newBtn.task = task;
+                //여기 있는 task 친구들은 일단은 Hour, Day 정보가 기본적으론 -1로 설정되어 있는 상황
                 newBtn.type = TASK_BLOCK;
                 newBtn.setText(task.title + "\n" + task.period);
                 newBtn.setGravity(Gravity.CENTER);
@@ -149,8 +172,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 setDrag(newBtn);//배치된 일정을 드래그해서 다른 시간에 배치할 수 있도록 롱클릭 이벤트 설정
                 setDeleteDialog(newBtn);//클릭하면 일정을 삭제할 수 있도록 이벤트 설정
                 blockList.add(newBtn);
-
-                task_layout.addView(newBtn);
+                //block List 에 Append하는 상황
                 dialog.dismiss();
             }
         });
@@ -259,6 +281,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     targetCell.task = droppedCell.task;
                     targetCell.task.hour = row;
                     targetCell.task.day = column;
+                    setDrag(targetCell);
                     setDrag(targetCell);
                     setDeleteDialog(targetCell);
 

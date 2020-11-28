@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         dummies[4].task.hour = 2;
         dummies[4].task.title = "dummy5";
 
+
+        //이걸 참고해서 데이터베이스에서 정보들을 가져오면 된다.
         for (CustomTextView item : dummies)
             taskList.add(item);
 

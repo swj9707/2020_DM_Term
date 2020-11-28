@@ -55,12 +55,14 @@ public class PlanDBController {
     public void close(){mDB.close();}
 
     // Insert DB
-    public long insertColumn(String name, String contents, String startDate, String endDate){
+    public long insertColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
         ContentValues values = new ContentValues();
-        values.put(PlanDB.CreateDB.NAME, name);
-        values.put(PlanDB.CreateDB.CONTENTS,contents);
-        values.put(PlanDB.CreateDB.STARTDATE, startDate);
-        values.put(PlanDB.CreateDB.ENDDATE, endDate);
+        values.put(PlanDB.CreateDB.TYPE, Type);
+        values.put(PlanDB.CreateDB.TITLE, Title);
+        values.put(PlanDB.CreateDB.DROPPABLE, Droppable);
+        values.put(PlanDB.CreateDB.PERIOD, Period);
+        values.put(PlanDB.CreateDB.HOUR, Hour);
+        values.put(PlanDB.CreateDB.DAY, Day);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while (c.moveToNext()){
@@ -76,12 +78,14 @@ public class PlanDBController {
     }
 
     // Update DB
-    public boolean updateColumn(long id, String name, String contents, String startDate, String endDate){
+    public boolean updateColumn(long id, int Type, String Title, int Droppable, int Period, int Hour, int Day){
         ContentValues values = new ContentValues();
-        values.put(PlanDB.CreateDB.NAME, name);
-        values.put(PlanDB.CreateDB.CONTENTS,contents);
-        values.put(PlanDB.CreateDB.STARTDATE, startDate);
-        values.put(PlanDB.CreateDB.ENDDATE, endDate);
+        values.put(PlanDB.CreateDB.TYPE, Type);
+        values.put(PlanDB.CreateDB.TITLE, Title);
+        values.put(PlanDB.CreateDB.DROPPABLE, Droppable);
+        values.put(PlanDB.CreateDB.PERIOD, Period);
+        values.put(PlanDB.CreateDB.HOUR, Hour);
+        values.put(PlanDB.CreateDB.DAY, Day);
         /*
         Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
         while(c.moveToNext()){
@@ -113,12 +117,14 @@ public class PlanDBController {
         Cursor c = selectColumns();
         while(c.moveToNext()){
             int _id = c.getInt(0);
-            String Name = c.getString(1);
-            String Content = c.getString(2);
-            String StartDate = c.getString(3);
-            String EndDate = c.getString(4);
-            Log.d("","_id:"+_id+" ,Name:"+Name
-                    +" ,Content:"+Content+" ,StartDate:"+StartDate+" ,EndDate:"+EndDate);
+            int Type = c.getInt(1);
+            String Title = c.getString(2);
+            int Droppable = c.getInt(3);
+            int Period = c.getInt(4);
+            int Hour = c.getInt(5);
+            int Day = c.getInt(6);
+            Log.d("","_id:"+_id+" ,Type:"+Type
+                    +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
         }
     }
 

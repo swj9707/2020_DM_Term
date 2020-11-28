@@ -114,8 +114,10 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             item.setBackgroundColor(Color.parseColor("#505355"));
             item.setTextColor(Color.parseColor("#BEBEBE"));
             item.setText(item.task.title);
-            setDrag(item);
+
+            item.setOnDragListener(new myOnDragListener());
             setDeleteDialog(item);
+            setDrag(item);
             timeTable.addView(item);
             mergeCells(item.task.period, id);
         }

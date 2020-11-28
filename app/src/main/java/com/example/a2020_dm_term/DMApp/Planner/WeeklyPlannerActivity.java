@@ -235,6 +235,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                 setDrag(newBtn);//배치된 일정을 드래그해서 다른 시간에 배치할 수 있도록 롱클릭 이벤트 설정
                 setDeleteDialog(newBtn);//클릭하면 일정을 삭제할 수 있도록 이벤트 설정
                 blockList.add(newBtn);
+                task_layout.addView(newBtn);
                 //block List 에 Append하는 상황
                 dialog.dismiss();
             }

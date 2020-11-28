@@ -2,6 +2,7 @@ package com.example.a2020_dm_term.DMApp.Planner;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -162,8 +163,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         //이걸 참고해서 데이터베이스에서 정보들을 가져오면 된다.
-        for (CustomTextView item : dummies)
-            taskList.add(item);
+        /*for (CustomTextView item : dummies)
+            taskList.add(item);*/
+        downloadPlnDB();
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -228,13 +230,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //데이터 로드 & 적용
-        for (CustomTextView item : dummies) {
+        for (CustomTextView item : taskList) {
             int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
             mergeCells(item.task.period, id);
             CustomTextView cell = (CustomTextView) findViewById(id);
             cell.setText(item.task.title);
         }
     }
+
 
     public void mergeCells(int period, int id) {
         CustomTextView cell = (CustomTextView) findViewById(id);
@@ -250,5 +253,24 @@ public class MainActivity extends AppCompatActivity {
         float scale = getResources().getDisplayMetrics().density;
         int px = (int) (dp * scale + 0.5f);
         return px;
+    }
+
+    public void downloadPlnDB() {
+        Cursor c = plnDBC.selectColumns();
+        while (c.moveToNext()) {
+            int Type = c.getInt(1);
+            String Title = c.getString(2);
+            int Droppable = c.getInt(3);
+            int Period = c.getInt(4);
+            int Hour = c.getInt(5);
+            int Day = c.getInt(6);
+            CustomTextView element = new CustomTextView(context, Type);
+            element.task.title = Title;
+            element.droppable = Droppable;
+            element.task.period = Period;
+            element.task.hour = Hour;
+            element.task.day = Day;
+            taskList.add(element);
+        }
     }
 }

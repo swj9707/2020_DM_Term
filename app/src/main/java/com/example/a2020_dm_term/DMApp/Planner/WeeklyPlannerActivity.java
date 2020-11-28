@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -39,6 +40,9 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weeklyplan);
+
+        downloadPlnDB();
+        downloadTaskDB();
 
         //시간표 셀 크기
         Display display = getWindowManager().getDefaultDisplay();
@@ -117,8 +121,8 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 /*현재 추가한 데이터들 DB에 추가*/
-                uploadPlnDbc();
-                uploadTaskDbc();
+                uploadPlnDB();
+                uploadTaskDB();
                 finish();
             }
         });
@@ -131,23 +135,61 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
             }
         });
     }
-    public void uploadPlnDbc(){
+    public void uploadPlnDB(){
         MainActivity.plnDBC.deleteAllColumns();
         //컨펌 하는 순간 현재 저장되어 있는 모든 정보들은 자동 삭제
         for(CustomTextView element : taskList){
             //이후 taskList 내에 있는 모든 정보들로 다시 갱신해줌
             //foreach 문을 사용
             MainActivity.plnDBC.insertColumn(element.type, element.task.title,
-                    element.droppable ? 1 : 0, element.task.period,element.task.hour,element.task.day);
+                    element.droppable, element.task.period,element.task.hour,element.task.day);
             //droppable 같은 경우는 SQLITE에서 따로 Boolean을 제공하지 않음
             //그래서 True or false 를 1 or 0으로 integer 데이터타입으로 변환해서 저장하는 방법을 채택함.
         }
     }
-    public void uploadTaskDbc(){
+    public void uploadTaskDB(){
         MainActivity.tskDBC.deleteAllColumns();
         for(CustomTextView element : blockList){
             MainActivity.tskDBC.insertColumn(element.type, element.task.title,
-                    element.droppable ? 1 : 0, element.task.period,element.task.hour,element.task.day);
+                    element.droppable, element.task.period,element.task.hour,element.task.day);
+        }
+    }
+
+    public void downloadPlnDB(){
+        //프로그램이 시작될 때 TaskList 갱신해주는 메서드
+        Cursor c = MainActivity.plnDBC.selectColumns();
+        while(c.moveToNext()) {
+            int Type = c.getInt(1);
+            String Title = c.getString(2);
+            int Droppable = c.getInt(3);
+            int Period = c.getInt(4);
+            int Hour = c.getInt(5);
+            int Day = c.getInt(6);
+            CustomTextView element = new CustomTextView(context, Type);
+            element.task.title = Title;
+            element.droppable = Droppable;
+            element.task.period = Period;
+            element.task.hour = Hour;
+            element.task.day = Day;
+            taskList.add(element);
+        }
+    }
+    public void downloadTaskDB(){
+        Cursor c = MainActivity.tskDBC.selectColumns();
+        while(c.moveToNext()){
+            int Type = c.getInt(1);
+            String Title = c.getString(2);
+            int Droppable = c.getInt(3);
+            int Period = c.getInt(4);
+            int Hour = c.getInt(5);
+            int Day = c.getInt(6);
+            CustomTextView element = new CustomTextView(context, Type);
+            element.task.title = Title;
+            element.droppable = Droppable;
+            element.task.period = Period;
+            element.task.hour = Hour;
+            element.task.day = Day;
+            blockList.add(element);
         }
     }
 

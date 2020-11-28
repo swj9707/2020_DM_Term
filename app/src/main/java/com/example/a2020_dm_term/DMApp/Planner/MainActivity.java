@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         SyncDB_Date();
         for (CustomTextView item : taskList) {
-            int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
+            int id = (item.task.hour) * 10 + (item.task.day);
             mergeCells(item.task.period, id);
             CustomTextView cell = (CustomTextView) findViewById(id);
             cell.setText(item.task.title);
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         int Min = (ContinuousTime % 3600) / 60;
         int Sec = (ContinuousTime % 3600) % 60;
         Log.d("CalculateTime",Hr + ":" + Min + ":" + Sec);
-        return Hr + ":" + Min + ":" + Sec;
+        return String.format("%02d", Hr) + ":" + String.format("%02d", Min) + ":" + String.format("%02d", Sec);
     }
 
     public void mergeCells(int period, int id) {

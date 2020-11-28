@@ -104,7 +104,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
 
     public void loadData() {
         for (CustomTextView item : taskList) {//이전에 생성된 일정 불러오고 배치하기
-            int id = (item.task.hour + 1) * 10 + (item.task.day + 1);
+            int id = (item.task.hour) * 10 + (item.task.day);
             timeTable.removeView((CustomTextView) findViewById(id));
             item.setId(id);
 
@@ -365,7 +365,7 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                                 splitCell(customView.task.period, customView.getId());//셀 분할
                                 taskList.remove((CustomTextView) v);
                                 //설정된 값들을 빈 값으로 변경하고 할당된 이벤트들을 모두 삭제함
-                                customView.task = null;
+                                customView.task = new TaskBlock();
                                 customView.droppable = 1;
                                 customView.setOnClickListener(null);
                                 customView.setOnLongClickListener(null);
@@ -440,7 +440,8 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
                     //드롭되었을 때 목표 셀에 정보 설정하고 이벤트 등록
                     targetCell.setText(droppedCell.task.title);
                     targetCell.droppable = 0;
-                    targetCell.task = droppedCell.task;
+                    targetCell.task.title = droppedCell.task.title;
+                    targetCell.task.period = droppedCell.task.period;
                     targetCell.task.hour = row;
                     targetCell.task.day = column;
                     setDrag(targetCell);
@@ -449,8 +450,10 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
 
                     //만약 배치된 일정을 다른 시간으로 변경하는 경우 설정된 정보, 이벤트 초기화
                     if (droppedCell.type == TABLE_CELL) {
+                        taskList.remove(droppedCell);
+
                         splitCell(droppedCell.task.period, droppedCell.getId());
-                        droppedCell.task = null;
+                        droppedCell.task = new TaskBlock();
                         droppedCell.droppable = 1;
                         droppedCell.setOnLongClickListener(null);
                         droppedCell.setOnClickListener(null);

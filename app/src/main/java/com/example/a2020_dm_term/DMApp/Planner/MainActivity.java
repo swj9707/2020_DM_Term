@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         plnDBC = new PlanDBController(this);
         tskDBC = new TaskDBController(this);
         sHrDBC = new StudyHourDBController(this);
+        date = new Date();
 
         plnDBC.open();
         plnDBC.create();
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SyncDB_Date() {
-        date = new Date();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
         String today = sdf.format(date);
         todayView.setText(today);
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         int Hr = ContinuousTime / 3600;
         int Min = (ContinuousTime % 3600) / 60;
         int Sec = (ContinuousTime % 3600) % 60;
+        Log.d("CalculateTime",Hr + ":" + Min + ":" + Sec);
         return Hr + ":" + Min + ":" + Sec;
     }
 
@@ -232,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void downloadPlnDB() {
+        taskList.clear();
         Cursor c = plnDBC.selectColumns();
         while (c.moveToNext()) {
             int Type = c.getInt(1);

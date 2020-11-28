@@ -17,6 +17,7 @@ import com.example.a2020_dm_term.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,6 +79,7 @@ public class RestrictActivity extends AppCompatActivity {
         public void onClick(View v) {
             Toast.makeText(getApplicationContext(), "방해금지 모드를 종료합니다.", Toast.LENGTH_SHORT).show();
             timer.cancel();
+            stopTimer();
             finish();
             //더이상의 자세한 설명은 생략한다.
         }
@@ -101,7 +103,7 @@ public class RestrictActivity extends AppCompatActivity {
         //위에서 설명한 종료 버튼 리스너를 선언 후 Input
 
         date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년MM월dd일");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
         today = sdf.format(date);
 
         screenOnReceiver = new ScreenOnReceiver();

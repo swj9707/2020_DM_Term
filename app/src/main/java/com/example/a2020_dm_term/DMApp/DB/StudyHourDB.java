@@ -8,7 +8,6 @@ public class StudyHourDB {
         public static final String CONTINUOUS = "CONTINUOUS";
         public static final String _TABLENAME3 = "STUDYHOUR";
         public static final String _CREATE1 ="create table if not exists "+_TABLENAME3+"("
-                +_ID+" integer primary key autoincrement, "
                 +DATE+" text not null , "
                 +CONTINUOUS+" integer not null); ";
     }

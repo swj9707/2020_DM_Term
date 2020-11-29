@@ -63,40 +63,8 @@ public class PlanDBController {
         values.put(PlanDB.CreateDB.PERIOD, Period);
         values.put(PlanDB.CreateDB.HOUR, Hour);
         values.put(PlanDB.CreateDB.DAY, Day);
-        /*
-        Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
-        while (c.moveToNext()){
-            String Name = c.getString(2);
-            if( c.getString(1).equals(Name) && c.getString(2).equals(contents)){
-                Log.d("", "Ingredient:"+contents+"가 이미 존재합니다.");
-                return 0;
-            }
-        }*/
-        //예전에 만들었던 코드에서 썼던 중복 확인 메서드. 지금은 필요없지만 나중에 혹시 필요하면 고쳐쓰게 냅둠
 
         return mDB.insert(PlanDB.CreateDB._TABLENAME1, null, values);
-    }
-
-    // Update DB
-    public boolean updateColumn(long id, int Type, String Title, int Droppable, int Period, int Hour, int Day){
-        ContentValues values = new ContentValues();
-        values.put(PlanDB.CreateDB.TYPE, Type);
-        values.put(PlanDB.CreateDB.TITLE, Title);
-        values.put(PlanDB.CreateDB.DROPPABLE, Droppable);
-        values.put(PlanDB.CreateDB.PERIOD, Period);
-        values.put(PlanDB.CreateDB.HOUR, Hour);
-        values.put(PlanDB.CreateDB.DAY, Day);
-        /*
-        Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
-        while(c.moveToNext()){
-            String Name = c.getString(1);
-            if(c.getString(1).equals(name)){
-                Log.d("","Name:"+Name+"가 이미 존재합니다.");
-                return false;
-            }
-        }*/
-
-        return mDB.update(PlanDB.CreateDB._TABLENAME1, values, "_id=" + id, null) > 0;
     }
 
     // Delete All
@@ -105,8 +73,10 @@ public class PlanDBController {
     }
 
     // Delete DB
-    public boolean deleteColumn(long id){
-        return mDB.delete(PlanDB.CreateDB._TABLENAME1, "_id="+id, null) > 0;
+    public boolean deleteColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
+        return mDB.delete(PlanDB.CreateDB._TABLENAME1,
+                "TYPE="+Type+"TITLE="+Title+"DROPPABLE="+Droppable+"PERIOD="+Period+"HOUR="+Hour+"DAY="+Day,
+                null) > 0;
     }
     // Select DB
     public Cursor selectColumns(){
@@ -116,22 +86,14 @@ public class PlanDBController {
     public void SelectAll(){
         Cursor c = selectColumns();
         while(c.moveToNext()){
-            int _id = c.getInt(0);
-            int Type = c.getInt(1);
-            String Title = c.getString(2);
-            int Droppable = c.getInt(3);
-            int Period = c.getInt(4);
-            int Hour = c.getInt(5);
-            int Day = c.getInt(6);
-            Log.d("PlanDBController","_id:"+_id+" ,Type:"+Type
+            int Type = c.getInt(0);
+            String Title = c.getString(1);
+            int Droppable = c.getInt(2);
+            int Period = c.getInt(3);
+            int Hour = c.getInt(4);
+            int Day = c.getInt(5);
+            Log.d("PlanDBController","Type:"+Type
                     +" ,Title:"+Title+" ,Droppable:"+Droppable+" ,Period:"+Period+" ,Hour:"+Hour+" ,Day:"+Day);
         }
-    }
-
-
-
-    public Cursor sortColumn(String sort){
-        Cursor c = mDB.rawQuery( "SELECT * FROM items ORDER BY " + sort + ";", null);
-        return c;
     }
 }

@@ -12,7 +12,6 @@ public class TaskDB {
         public static final String DAY = "DAY";
         public static final String _TABLENAME2 = "TASK";
         public static final String _CREATE2 ="create table if not exists "+_TABLENAME2+"("
-                +_ID+" integer primary key autoincrement, "
                 +TYPE+" integer not null , "
                 +TITLE+" text not null , "
                 +DROPPABLE+" integer not null , "

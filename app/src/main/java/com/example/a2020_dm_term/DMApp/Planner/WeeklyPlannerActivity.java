@@ -234,12 +234,12 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
         //프로그램이 시작될 때 TaskList 갱신해주는 메서드
         Cursor c = MainActivity.plnDBC.selectColumns();
         while (c.moveToNext()) {
-            int Type = c.getInt(1);
-            String Title = c.getString(2);
-            int Droppable = c.getInt(3);
-            int Period = c.getInt(4);
-            int Hour = c.getInt(5);
-            int Day = c.getInt(6);
+            int Type = c.getInt(0);
+            String Title = c.getString(1);
+            int Droppable = c.getInt(2);
+            int Period = c.getInt(3);
+            int Hour = c.getInt(4);
+            int Day = c.getInt(5);
             Log.d("DownLoadPlanDB", "Type:" + Type
                     + " ,Title:" + Title + " ,Droppable:" + Droppable + " ,Period:" + Period + " ,Hour:" + Hour + " ,Day:" + Day);
             CustomTextView element = new CustomTextView(this, Type);
@@ -255,12 +255,12 @@ public class WeeklyPlannerActivity extends AppCompatActivity {
     public void downloadTaskDB() {
         Cursor c = MainActivity.tskDBC.selectColumns();
         while (c.moveToNext()) {
-            int Type = c.getInt(1);
-            String Title = c.getString(2);
-            int Droppable = c.getInt(3);
-            int Period = c.getInt(4);
-            int Hour = c.getInt(5);
-            int Day = c.getInt(6);
+            int Type = c.getInt(0);
+            String Title = c.getString(1);
+            int Droppable = c.getInt(2);
+            int Period = c.getInt(3);
+            int Hour = c.getInt(4);
+            int Day = c.getInt(5);
             Log.d("DownLoadTaskDB", "Type:" + Type
                     + " ,Title:" + Title + " ,Droppable:" + Droppable + " ,Period:" + Period + " ,Hour:" + Hour + " ,Day:" + Day);
             CustomTextView element = new CustomTextView(this, Type);

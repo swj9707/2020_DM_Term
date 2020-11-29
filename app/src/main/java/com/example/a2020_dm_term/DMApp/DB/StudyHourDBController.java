@@ -59,36 +59,7 @@ public class StudyHourDBController {
         ContentValues values = new ContentValues();
         values.put(StudyHourDB.CreateDB.DATE, date);
         values.put(StudyHourDB.CreateDB.CONTINUOUS, continuous);
-        /*
-        Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
-        while (c.moveToNext()){
-            String Name = c.getString(2);
-            if( c.getString(1).equals(Name) && c.getString(2).equals(contents)){
-                Log.d("", "Ingredient:"+contents+"가 이미 존재합니다.");
-                return 0;
-            }
-        }*/
-        //예전에 만들었던 코드에서 썼던 중복 확인 메서드. 지금은 필요없지만 나중에 혹시 필요하면 고쳐쓰게 냅둠
-
         return mDB.insert(StudyHourDB.CreateDB._TABLENAME3, null, values);
-    }
-
-    // Update DB
-    public boolean updateColumn(long id, String date, String continuous) {
-        ContentValues values = new ContentValues();
-        values.put(StudyHourDB.CreateDB.DATE, date);
-        values.put(StudyHourDB.CreateDB.CONTINUOUS, continuous);
-        /*
-        Cursor c = mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
-        while(c.moveToNext()){
-            String Name = c.getString(1);
-            if(c.getString(1).equals(name)){
-                Log.d("","Name:"+Name+"가 이미 존재합니다.");
-                return false;
-            }
-        }*/
-
-        return mDB.update(StudyHourDB.CreateDB._TABLENAME3, values, "_id=" + id, null) > 0;
     }
 
     // Delete All
@@ -96,9 +67,8 @@ public class StudyHourDBController {
         mDB.delete(StudyHourDB.CreateDB._TABLENAME3, null, null);
     }
 
-    // Delete DB
-    public boolean deleteColumn(long id) {
-        return mDB.delete(StudyHourDB.CreateDB._TABLENAME3, "_id=" + id, null) > 0;
+    public boolean deleteColumn(String date, String continuous){
+        return mDB.delete(StudyHourDB.CreateDB._TABLENAME3, "date="+date+"continuous"+continuous, null) > 0;
     }
 
     // Select DB
@@ -109,10 +79,9 @@ public class StudyHourDBController {
     public void SelectAll() {
         Cursor c = selectColumns();
         while (c.moveToNext()) {
-            int _id = c.getInt(0);
-            String Date = c.getString(1);
-            String Continuous = c.getString(2);
-            Log.d("StudyHourDBController", "_id:" + _id + " ,Date:" + Date
+            String Date = c.getString(0);
+            String Continuous = c.getString(1);
+            Log.d("StudyHourDBController", "Date:" + Date
                     + " ,Continuous:" + Continuous);
         }
     }
@@ -121,24 +90,15 @@ public class StudyHourDBController {
         int totalTime = 0;
         Cursor c = selectColumns();
         while(c.moveToNext()){
-            int _id = c.getInt(0);
-            String Date = c.getString(1);
-            String Continuous = c.getString(2);
+            String Date = c.getString(0);
+            String Continuous = c.getString(1);
             if(!Date.equals(Today)) {
-                Log.d("resetDB Method","Date != Today");
-                Log.d("resetDB Method","Date : "+Date+" Today : "+Today);
+                deleteColumn(Date,Continuous);
             }
             else {
-                Log.d("resetDB Method","Date == Today");
                 totalTime += Integer.parseInt(Continuous);
             }
         }
-        Log.d("sync Method","Total Time : "+totalTime);
         return totalTime;
-    }
-
-    public Cursor sortColumn(String sort) {
-        Cursor c = mDB.rawQuery("SELECT * FROM items ORDER BY " + sort + ";", null);
-        return c;
     }
 }

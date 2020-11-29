@@ -13,7 +13,6 @@ public class PlanDB {
         public static final String DAY = "DAY";
         public static final String _TABLENAME1 = "PLAN";
         public static final String _CREATE1 ="create table if not exists "+_TABLENAME1+"("
-                +_ID+" integer primary key autoincrement, "
                 +TYPE+" integer not null , "
                 +TITLE+" text not null , "
                 +DROPPABLE+" integer not null , "

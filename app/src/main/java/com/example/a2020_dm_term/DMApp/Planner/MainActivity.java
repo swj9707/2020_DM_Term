@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         tskDBC = new TaskDBController(this);
         sHrDBC = new StudyHourDBController(this);
         date = new Date();
+        //DataBase Controller, 그리고 날짜 객체 선언
 
         plnDBC.open();
         plnDBC.create();
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         //create -> open 같은 경우는 에러 남
 
         SyncDB_Date();//DB와 날짜, 공부 시간 등을 동기화 해주는 메서드
-        //mkTimeTable();
+        mkTimeTable();//시간표 동기화 시킬 때 사용하는 메서드
     }
 
     @Override
@@ -193,37 +194,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void SyncDB_Date() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
-        String today = sdf.format(date);
-        todayView.setText(today);
-
-        plnDBC.SelectAll();
-        tskDBC.SelectAll();
-        sHrDBC.SelectAll();
-        //테스트용으로 전체 데이터베이스들 전부 콘솔에 띄워보는 코드
-        ContinuousTime = sHrDBC.sync(today);
-        /*
-        Sync 메서드 설명
-        매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
-        초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
-        * */
-        String time = CalculateTime(ContinuousTime);
-        //그날 공부 총 지속 시간을 계산 해 내는 코드
-        //방법은 간단하니 생략하도록 하겠음
-        Log.d("MainActivity", "ContinuousTime : " + time);
-        studyTimeView.setText("오늘 공부한 시간 : "+time);
-        downloadPlnDB();
-    }
-
-    public String CalculateTime(int ContinuousTime) {
-        int Hr = ContinuousTime / 3600;
-        int Min = (ContinuousTime % 3600) / 60;
-        int Sec = (ContinuousTime % 3600) % 60;
-        Log.d("CalculateTime",Hr + ":" + Min + ":" + Sec);
-        return String.format("%02d", Hr) + ":" + String.format("%02d", Min) + ":" + String.format("%02d", Sec);
-    }
-
     public void mergeCells(int period, int id) {
         CustomTextView cell = (CustomTextView) findViewById(id);
         for (int i = 1; i <= period - 1; i++)
@@ -240,16 +210,48 @@ public class MainActivity extends AppCompatActivity {
         return px;
     }
 
+    public void SyncDB_Date() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
+        String today = sdf.format(date);
+        todayView.setText(today);
+
+        plnDBC.SelectAll();
+        tskDBC.SelectAll();
+        sHrDBC.SelectAll();
+        //테스트용으로 전체 데이터베이스 컬럼들 전부 콘솔에 띄워보는 코드
+        ContinuousTime = sHrDBC.sync(today);
+        /*
+        Sync 메서드 설명
+        매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
+        초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
+        * */
+        String time = CalculateTime(ContinuousTime);
+        //그날 공부 총 지속 시간을 계산 해 내는 메서드
+        Log.d("MainActivity", "ContinuousTime : " + time);
+        studyTimeView.setText("오늘 공부한 시간 : "+time);
+        downloadPlnDB();
+    }
+
+    public String CalculateTime(int ContinuousTime) {
+        int Hr = ContinuousTime / 3600;
+        int Min = (ContinuousTime % 3600) / 60;
+        int Sec = (ContinuousTime % 3600) % 60;
+        Log.d("CalculateTime",Hr + ":" + Min + ":" + Sec);
+        return String.format("%02d", Hr) + ":" + String.format("%02d", Min) + ":" + String.format("%02d", Sec);
+    }
+
+
+
     public void downloadPlnDB() {
         taskList.clear();
         Cursor c = plnDBC.selectColumns();
         while (c.moveToNext()) {
-            int Type = c.getInt(1);
-            String Title = c.getString(2);
-            int Droppable = c.getInt(3);
-            int Period = c.getInt(4);
-            int Hour = c.getInt(5);
-            int Day = c.getInt(6);
+            int Type = c.getInt(0);
+            String Title = c.getString(1);
+            int Droppable = c.getInt(2);
+            int Period = c.getInt(3);
+            int Hour = c.getInt(4);
+            int Day = c.getInt(5);
             Log.d("DownLoadPlanDB", "Type:" + Type
                     + " ,Title:" + Title + " ,Droppable:" + Droppable + " ,Period:" + Period + " ,Hour:" + Hour + " ,Day:" + Day);
             CustomTextView element = new CustomTextView(this, Type);

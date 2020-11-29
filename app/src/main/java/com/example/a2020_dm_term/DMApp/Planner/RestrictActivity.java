@@ -57,19 +57,14 @@ public class RestrictActivity extends AppCompatActivity {
             //onReceive가 선언되었을 때
             String action = intent.getAction();
             //intent.getAction 메서드를 통해 받아 온 결과를 확인한다. 여기서 intent는 따로 선언해줄 필요는 없음
-            Log.d("ScreenOnReceiver", "ScreenOnReceiver, onReceive:" + action);
-            //이 친구는 action이 뭔가 확인 해 보려고 선언 해 놓은 Log.d
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
                 //만약 String action이 Intent.ACTION_SCREEN_ON과 같다면 -> 즉 화면이 켜지는 Broadcast를 catch했다면
                 screenOn = true;
                 //boolean screenOn을 true로 처리함
-                Log.d("ScreenOnReceiver", "ScreenOnReceiver, ScreenOn");
-                //확인용 Log.d -> 나중에는 삭제 할 예정
             } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 //else if -> String action == Intent.ACTION.SCREEN_OFF
                 screenOn = false;
-                //else if니까 위 랑은 다른 결과. 아래 Log.d 또한 마찬가지로 확인용.
-                Log.d("ScreenOnReceiver", "ScreenOnReceiver, ScreenOFF");
+                //else if니까 위 랑은 다른 결과.
             }
         }
     }
@@ -127,13 +122,10 @@ public class RestrictActivity extends AppCompatActivity {
                 second = (elapsedTime % 3600) % 60;
                 time = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second);
                 /*
-                위의 매커니즘은 따로 설명하지 않겠음.
-                간단히만 설명하자면 elapsedTime은 초당 1씩 올라가고
-                그 값들을 통해 H,M,S 정보들을 받아와서 String time을 완성하는 게 다임*/
-                Log.v(this.getClass().getName(), time);
-                //제대로 작동하는 가 확인 용 Log
+                elapsedTime은 초당 1씩 올라가고
+                그 값들을 통해 H,M,S 정보들을 받아와서 String time을 완성*/
                 updateTime();
-                //updateTime 메서드 발동 -> 아래에서 자세히 설명하겠음
+                //updateTime 메서드 발동 -> 매 초마다 지나가고 있는 시간을 TextView에 반영
             }
         };
         timer.schedule(TT, 0, 1000);
@@ -145,7 +137,7 @@ public class RestrictActivity extends AppCompatActivity {
         /*
         onStop이 걸렸을 때 -> Activity가 완전히 뒤로 넘어갔을 때
         여러가지 경우가 있겠지만 아마 이 앱을 넘기고 딴짓을 하는 상황이라 판단하고
-        Timer를 완전히 꺼버릴 예정.
+        Timer를 완전히 꺼버림
         * */
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -212,6 +204,5 @@ public class RestrictActivity extends AppCompatActivity {
         };
         handler.post(updater);
         MainActivity.sHrDBC.insertColumn(today, Integer.toString(elapsedTime));
-        MainActivity.sHrDBC.SelectAll();
     }
 }

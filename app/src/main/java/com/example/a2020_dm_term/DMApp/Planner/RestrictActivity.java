@@ -98,7 +98,7 @@ public class RestrictActivity extends AppCompatActivity {
         //위에서 설명한 종료 버튼 리스너를 선언 후 Input
 
         date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
         today = sdf.format(date);
 
         screenOnReceiver = new ScreenOnReceiver();

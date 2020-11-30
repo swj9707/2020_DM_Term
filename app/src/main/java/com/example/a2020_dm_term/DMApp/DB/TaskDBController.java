@@ -73,7 +73,7 @@ public class TaskDBController {
     // DELETE 쿼리 처리 메서드
     public boolean deleteColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
         return mDB.delete(TaskDB.CreateDB._TABLENAME2,
-                "TYPE="+Type+"TITLE="+Title+"DROPPABLE="+Droppable+"PERIOD="+Period+"HOUR="+Hour+"DAY="+Day,
+                "TYPE="+Type+"TITLE="+Title+",DROPPABLE="+Droppable+",PERIOD="+Period+",HOUR="+Hour+",DAY="+Day,
                 null) > 0;
     }
     // SELECT 메서드 -> Cursor 를 사용해서 마치 파일 포인터 사용하듯 테이블에 접근

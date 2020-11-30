@@ -67,8 +67,8 @@ public class StudyHourDBController {
         mDB.delete(StudyHourDB.CreateDB._TABLENAME3, null, null);
     }
 
-    public boolean deleteColumn(String date, String continuous){
-        return mDB.delete(StudyHourDB.CreateDB._TABLENAME3, "date="+date+"continuous"+continuous, null) > 0;
+    public boolean deleteColumn(String date){
+        return mDB.delete(StudyHourDB.CreateDB._TABLENAME3, "date="+"\""+date+"\"", null) > 0;
     }
 
     // Select DB
@@ -93,7 +93,7 @@ public class StudyHourDBController {
             String Date = c.getString(0);
             String Continuous = c.getString(1);
             if(!Date.equals(Today)) {
-                deleteColumn(Date,Continuous);
+                deleteColumn(Date);
             }
             else {
                 totalTime += Integer.parseInt(Continuous);

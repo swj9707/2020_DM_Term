@@ -54,7 +54,7 @@ public class PlanDBController {
     }
     public void close(){mDB.close();}
 
-    // Insert DB
+    // INSERT 쿼리 처리 메서드
     public long insertColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
         ContentValues values = new ContentValues();
         values.put(PlanDB.CreateDB.TYPE, Type);
@@ -67,18 +67,18 @@ public class PlanDBController {
         return mDB.insert(PlanDB.CreateDB._TABLENAME1, null, values);
     }
 
-    // Delete All
+    // 모든 컬럼을 삭제하는 메서드
     public void deleteAllColumns() {
         mDB.delete(PlanDB.CreateDB._TABLENAME1, null, null);
     }
 
-    // Delete DB
+    // DELETE 쿼리 처리 메서드
     public boolean deleteColumn(int Type, String Title, int Droppable, int Period, int Hour, int Day){
         return mDB.delete(PlanDB.CreateDB._TABLENAME1,
                 "TYPE="+Type+"TITLE="+Title+"DROPPABLE="+Droppable+"PERIOD="+Period+"HOUR="+Hour+"DAY="+Day,
                 null) > 0;
     }
-    // Select DB
+    // SELECT 메서드 -> Cursor 를 사용해서 마치 파일 포인터 사용하듯 테이블에 접근
     public Cursor selectColumns(){
         return mDB.query(PlanDB.CreateDB._TABLENAME1, null, null, null, null, null, null);
     }

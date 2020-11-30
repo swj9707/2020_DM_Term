@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static java.lang.Thread.sleep;
+
 /*
 실제 플래너가 실행되는 공간.
 * */
@@ -35,12 +37,13 @@ public class MainActivity extends AppCompatActivity {
     Intent weeklyIntent;
     RelativeLayout timeTable;
     NestedScrollView nestedScrollView;
+    int ContinuousTime;
+
 
     public static PlanDBController plnDBC;
     public static TaskDBController tskDBC;
     public static StudyHourDBController sHrDBC;
     private Date date;
-    private int ContinuousTime;
 
     ArrayList<CustomTextView> taskList = new ArrayList<CustomTextView>();
 
@@ -108,13 +111,13 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         mkTimeTable();
-        SyncDB_Date();
         for (CustomTextView item : taskList) {
             int id = (item.task.hour) * 10 + (item.task.day);
             mergeCells(item.task.period, id);
             CustomTextView cell = (CustomTextView) findViewById(id);
             cell.setText(item.task.title);
         }
+        SyncDB_Date();
     }
 
     public void mkTimeTable() {
@@ -211,22 +214,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SyncDB_Date() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
-        String today = sdf.format(date);
-        todayView.setText(today);
-
-        plnDBC.SelectAll();
-        tskDBC.SelectAll();
-        sHrDBC.SelectAll();
-        //테스트용으로 전체 데이터베이스 컬럼들 전부 콘솔에 띄워보는 코드
-        ContinuousTime = sHrDBC.sync(today);
         /*
         Sync 메서드 설명
         매 날짜가 변할 때 마다 그날 공부 지속 시간을 초기화 해 줄 필요가 있기 때문에
         초기화 해 주는 김에 그날 공부한 총 시간까지 계산해서 Return 해 주는 메서드
         * */
-        String time = CalculateTime(ContinuousTime);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
+        String today = sdf.format(date);
+        todayView.setText(today);
         //그날 공부 총 지속 시간을 계산 해 내는 메서드
+        ContinuousTime = MainActivity.sHrDBC.sync(today);
+        String time = CalculateTime(ContinuousTime);
         Log.d("MainActivity", "ContinuousTime : " + time);
         studyTimeView.setText("오늘 공부한 시간 : "+time);
         downloadPlnDB();

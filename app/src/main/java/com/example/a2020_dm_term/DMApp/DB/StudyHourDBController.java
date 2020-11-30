@@ -54,7 +54,7 @@ public class StudyHourDBController {
         mDB.close();
     }
 
-    // Insert DB
+    // INSERT 쿼리 처리 메서드
     public long insertColumn(String date, String continuous) {
         ContentValues values = new ContentValues();
         values.put(StudyHourDB.CreateDB.DATE, date);
@@ -62,16 +62,17 @@ public class StudyHourDBController {
         return mDB.insert(StudyHourDB.CreateDB._TABLENAME3, null, values);
     }
 
-    // Delete All
+    // 모든 컬럼을 삭제하는 메서드
     public void deleteAllColumns() {
         mDB.delete(StudyHourDB.CreateDB._TABLENAME3, null, null);
     }
 
+    // DELETE 쿼리 처리 메서드
     public boolean deleteColumn(String date){
         return mDB.delete(StudyHourDB.CreateDB._TABLENAME3, "date="+"\""+date+"\"", null) > 0;
     }
 
-    // Select DB
+    // SELECT 메서드 -> Cursor 를 사용해서 마치 파일 포인터 사용하듯 테이블에 접근
     public Cursor selectColumns() {
         return mDB.query(StudyHourDB.CreateDB._TABLENAME3, null, null, null, null, null, null);
     }

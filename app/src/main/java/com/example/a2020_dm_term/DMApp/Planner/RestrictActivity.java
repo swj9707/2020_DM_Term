@@ -21,6 +21,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.lang.Thread.sleep;
+
 public class RestrictActivity extends AppCompatActivity {
     private Context context;
     //Context
@@ -175,6 +177,13 @@ public class RestrictActivity extends AppCompatActivity {
         onDestroy 될 때 또한 당연히 TT를 멈춰 줄 필요가 있음.
         * */
         TT.cancel();
+        MainActivity.sHrDBC.insertColumn(today, Integer.toString(elapsedTime));
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
         super.onDestroy();
     }
 
@@ -203,6 +212,5 @@ public class RestrictActivity extends AppCompatActivity {
             }
         };
         handler.post(updater);
-        MainActivity.sHrDBC.insertColumn(today, Integer.toString(elapsedTime));
     }
 }
